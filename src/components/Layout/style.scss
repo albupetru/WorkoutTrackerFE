@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.menu-list {
+  display: flex;
+  justify-content: space-around;
+  list-style-type: none;
+  padding: 1em 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #f8f8f800; // Change this as needed
+}
