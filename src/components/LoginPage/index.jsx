@@ -1,45 +1,36 @@
-import Button from "../Button";
-import { useNavigate } from "react-router-dom";
-import { useGoogleLogin } from "@react-oauth/google";
-import "./style.scss";
+import Button from '../Button';
+import { useNavigate } from 'react-router-dom';
+import { useGoogleLogin } from '@react-oauth/google';
+import { logIn, isLoggedIn } from '../authentication/authenticationManager';
+import useAuth from '../authentication/useAuth';
+import './style.scss';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { onLogIn } = useAuth();
 
-  const handleLoginSuccess = (requestToken) => {
-    console.log("response", requestToken);
-    localStorage.setItem("requestToken", requestToken);
-
-    // // set API request token in the axios instance
-    // request.setHeader("Authorization", `Bearer ${requestToken.data.jwtToken}`);
-
-    navigate("/");
+  const onGoogleLoginSuccess = async () => {
+    await onLogIn();
+    navigate('/');
   };
 
-  const handleGoogleLogin = (googleResponse) => {
-    fetch("https://localhost:7164/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code: googleResponse.code }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        handleLoginSuccess(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const handleLogin = useGoogleLogin({
-    onSuccess: handleGoogleLogin,
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (googleResponse) => logIn(googleResponse, onGoogleLoginSuccess),
     onError: () => {
-      console.error("Google login failed");
+      console.error('Google login failed');
     },
-    flow: "auth-code",
+    flow: 'auth-code',
   });
+
+  const handleLogin = async () => {
+    const userLoggedIn = await isLoggedIn();
+    if (userLoggedIn) {
+      await onLogIn();
+      navigate('/');
+    } else {
+      handleGoogleLogin();
+    }
+  };
 
   return (
     <>
