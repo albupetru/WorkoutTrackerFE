@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode } from "react";
+import { MouseEvent, ReactNode } from 'react';
 
 type ButtonProps = {
   onClick: (event: MouseEvent) => void;

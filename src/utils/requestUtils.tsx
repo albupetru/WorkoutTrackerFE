@@ -1,8 +1,8 @@
-import { RequestHeaders } from "../types/requestHeaders.type";
+import { RequestHeaders } from '../types/requestHeaders.type';
 
-let defaultHeaders: RequestHeaders = {
-  Authorization: `Bearer ${localStorage.getItem("requestToken")}`,
-  "Content-Type": "application/json",
+const defaultHeaders: RequestHeaders = {
+  Authorization: `Bearer ${localStorage.getItem('requestToken')}`,
+  'Content-Type': 'application/json',
 };
 
 // TODO: error handling, options type

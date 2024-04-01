@@ -1,4 +1,4 @@
-import { UserData } from "../../types/userData.type";
+import { UserData } from '../../types/userData.type';
 
 const initialState: UserData = {
   loading: false,

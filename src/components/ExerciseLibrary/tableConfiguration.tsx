@@ -1,15 +1,15 @@
 const tableConfiguration = [
   {
-    header: "Exercise Name",
-    accessorKey: "name",
+    header: 'Exercise Name',
+    accessorKey: 'name',
   },
   {
-    header: "Repetitions",
-    accessorKey: "repetitions",
+    header: 'Repetitions',
+    accessorKey: 'repetitions',
   },
   {
-    header: "Sets",
-    accessorKey: "sets",
+    header: 'Sets',
+    accessorKey: 'sets',
   },
 ];
 

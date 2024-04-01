@@ -4,7 +4,7 @@ import './style.scss';
 import useAuth from '../authentication/useAuth';
 
 const Layout = () => {
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const { onLogOut } = useAuth();
 
   const onLogOutClick = async () => {

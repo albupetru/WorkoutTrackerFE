@@ -1,25 +1,25 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
-} from "@tanstack/react-table";
-import tableConfiguration from "../tableConfiguration";
-import "./style.scss";
+} from '@tanstack/react-table';
+import tableConfiguration from '../tableConfiguration';
+import './style.scss';
 
 const defaultData = [
   {
-    name: "Bench Press",
+    name: 'Bench Press',
     repetitions: 10,
     sets: 3,
   },
   {
-    name: "Squats",
+    name: 'Squats',
     repetitions: 15,
     sets: 3,
   },
   {
-    name: "Deadlifts",
+    name: 'Deadlifts',
     repetitions: 8,
     sets: 3,
   },

@@ -13,7 +13,7 @@ interface JwtPayload {
   oid: string;
   name: string;
   exp: number;
-};
+}
 
 /**
  * Checks if the sessions is still valid
@@ -71,7 +71,10 @@ export const setupUser = async (): Promise<UserData | null> => {
   return null; // TODO: handle the null token case
 };
 
-export const logIn = (googleResponse: CodeResponse, successCallback: () => void) => {
+export const logIn = (
+  googleResponse: CodeResponse,
+  successCallback: () => void,
+) => {
   fetch('https://localhost:7164/login', {
     method: 'POST',
     headers: {

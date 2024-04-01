@@ -1,9 +1,9 @@
-import { createContext, useReducer, useMemo } from "react";
-import { setupUser, logOut } from "./authManager";
-import initialState from "./initialState";
-import reducer from "./reducer";
-import { setUser, clearUser } from "./reducerActions";
-import { UserData } from "../../types/userData.type";
+import { createContext, useReducer, useMemo } from 'react';
+import { setupUser, logOut } from './authManager';
+import initialState from './initialState';
+import reducer from './reducer';
+import { setUser, clearUser } from './reducerActions';
+import { UserData } from '../../types/userData.type';
 
 export type AuthDataContextType = {
   onLogIn: () => Promise<void>;

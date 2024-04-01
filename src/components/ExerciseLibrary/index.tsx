@@ -1,4 +1,4 @@
-import ExerciseTable from "./ExerciseTable/exerciseTable";
+import ExerciseTable from './ExerciseTable/exerciseTable';
 
 const ExerciseLibrary = () => {
   return (
