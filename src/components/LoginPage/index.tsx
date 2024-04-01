@@ -1,7 +1,7 @@
 import Button from '../Button';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
-import { logIn, isLoggedIn } from '../authentication/authenticationManager';
+import { logIn, isLoggedIn } from '../authentication/authManager';
 import useAuth from '../authentication/useAuth';
 import './style.scss';
 

@@ -1,11 +1,23 @@
-import React from "react";
+import { ChangeEvent } from "react";
 import PropTypes from "prop-types";
 import { stringIsNullUndefOrEmpty } from "../../utils/textUtils";
 
-const TextInput = ({ value, label, onChange, isPassword = false }) => {
+type TextInputProps = {
+  value?: string;
+  label?: string;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  isPassword?: boolean;
+};
+
+const TextInput = ({
+  value,
+  label,
+  onChange,
+  isPassword = false,
+}: TextInputProps) => {
   const type = isPassword ? "password" : "text";
 
-  if (stringIsNullUndefOrEmpty(label)) {
+  if (label === null || stringIsNullUndefOrEmpty(label)) {
     return (
       <div className="text-input">
         <input type={type} value={value} onChange={onChange} />

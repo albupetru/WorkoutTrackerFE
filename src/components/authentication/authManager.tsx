@@ -5,6 +5,15 @@ import {
   removeDefaultRequestHeader,
   customFetch,
 } from '../../utils/requestUtils';
+import { CodeResponse } from '@react-oauth/google';
+import { UserData } from '../../types/userData.type';
+
+interface JwtPayload {
+  email: string;
+  oid: string;
+  name: string;
+  exp: number;
+};
 
 /**
  * Checks if the sessions is still valid
@@ -17,7 +26,7 @@ export const isLoggedIn = async () => {
     return false;
   }
 
-  const apiToken = jwtDecode(decodeURIComponent(requestToken));
+  const apiToken = jwtDecode(decodeURIComponent(requestToken)) as JwtPayload;
 
   const { exp } = apiToken;
   const dateNow = new Date();
@@ -33,33 +42,36 @@ export const isLoggedIn = async () => {
   return true;
 };
 
-export const setupUser = async () => {
+export const setupUser = async (): Promise<UserData | null> => {
   const requestToken = localStorage.getItem('requestToken');
 
   setDefaultRequestHeader('Authorization', `Bearer ${requestToken}`);
 
   const accessToken = localStorage.getItem('accessToken');
 
-  const apiToken = jwtDecode(decodeURIComponent(requestToken));
+  if (requestToken !== null) {
+    const apiToken = jwtDecode(decodeURIComponent(requestToken)) as JwtPayload;
 
-  const email = apiToken.preferred_username;
-  const userId = apiToken.oid;
-  const name = apiToken.name;
+    const email = apiToken.email;
+    const userId = apiToken.oid;
+    const name = apiToken.name;
 
-  return {
-    loading: false,
-    error: false,
-    userId,
-    requestToken,
-    accessToken,
-    name,
-    email,
-    userImage: false,
-    userLoaded: true,
-  };
+    return {
+      loading: false,
+      error: false,
+      userId,
+      requestToken,
+      accessToken,
+      name,
+      email,
+      userImage: false,
+      userLoaded: true,
+    };
+  }
+  return null; // TODO: handle the null token case
 };
 
-export const logIn = (googleResponse, successCallback) => {
+export const logIn = (googleResponse: CodeResponse, successCallback: () => void) => {
   fetch('https://localhost:7164/login', {
     method: 'POST',
     headers: {
