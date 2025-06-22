@@ -1,13 +1,13 @@
-import { RequestHeaders } from '../types/requestHeaders.type';
+import { RequestHeaders } from "../types/requestHeaders.type";
 
-const defaultHeaders: RequestHeaders = {
-  Authorization: `Bearer ${localStorage.getItem('requestToken')}`,
-  'Content-Type': 'application/json',
+let defaultHeaders: RequestHeaders = {
+  Authorization: `Bearer ${localStorage.getItem("requestToken")}`,
+  "Content-Type": "application/json",
 };
 
 // TODO: error handling, options type
 
-const customFetch = (
+const authenticatedFetch = (
   url: string,
   options: any = {},
   customHeaders: RequestHeaders = {},
@@ -28,7 +28,7 @@ const removeDefaultRequestHeader = (key: string) => {
 };
 
 export {
-  customFetch,
+  authenticatedFetch,
   setDefaultRequestHeader,
   getDefaultRequestHeader,
   removeDefaultRequestHeader,

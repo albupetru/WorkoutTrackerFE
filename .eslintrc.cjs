@@ -5,15 +5,16 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
+    "@stylistic/ts",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",
-  plugins: ["react-refresh", "@stylistic"],
+  plugins: ["react-refresh"],
   rules: {
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
     ],
-    "@stylistic/quotes": ["error", "single"],
+    "@stylistic/ts/quotes": ["error", "single"],
   },
 };

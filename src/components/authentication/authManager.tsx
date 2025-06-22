@@ -1,12 +1,12 @@
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import {
   getDefaultRequestHeader,
   setDefaultRequestHeader,
   removeDefaultRequestHeader,
-  customFetch,
-} from '../../utils/requestUtils';
-import { CodeResponse } from '@react-oauth/google';
-import { UserData } from '../../types/userData.type';
+  authenticatedFetch,
+} from "../../utils/requestUtils";
+import { CodeResponse } from "@react-oauth/google";
+import { UserData } from "../../types/userData.type";
 
 interface JwtPayload {
   email: string;
@@ -20,7 +20,7 @@ interface JwtPayload {
  * @returns {boolean} Session validity status
  */
 export const isLoggedIn = async () => {
-  const requestToken = localStorage.getItem('requestToken');
+  const requestToken = localStorage.getItem("requestToken");
 
   if (requestToken == null || requestToken.length === 0) {
     return false;
@@ -35,19 +35,19 @@ export const isLoggedIn = async () => {
     return false;
   }
 
-  if (`Bearer ${requestToken}` !== getDefaultRequestHeader('Authorization')) {
-    setDefaultRequestHeader('Authorization', `Bearer ${requestToken}`);
+  if (`Bearer ${requestToken}` !== getDefaultRequestHeader("Authorization")) {
+    setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
   }
 
   return true;
 };
 
 export const setupUser = async (): Promise<UserData | null> => {
-  const requestToken = localStorage.getItem('requestToken');
+  const requestToken = localStorage.getItem("requestToken");
 
-  setDefaultRequestHeader('Authorization', `Bearer ${requestToken}`);
+  setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
 
-  const accessToken = localStorage.getItem('accessToken');
+  const accessToken = localStorage.getItem("accessToken");
 
   if (requestToken !== null) {
     const apiToken = jwtDecode(decodeURIComponent(requestToken)) as JwtPayload;
@@ -75,22 +75,22 @@ export const logIn = (
   googleResponse: CodeResponse,
   successCallback: () => void,
 ) => {
-  fetch('https://localhost:7164/login', {
-    method: 'POST',
+  fetch("/api/login", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ code: googleResponse.code }),
   })
     .then((response) => response.json())
     .then((requestToken) => {
-      localStorage.setItem('requestToken', requestToken);
-      setDefaultRequestHeader('Authorization', `Bearer ${requestToken}`);
+      localStorage.setItem("requestToken", requestToken);
+      setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
       requestToken;
       successCallback();
     })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error("Error:", error);
     });
 };
 
@@ -98,10 +98,10 @@ export const logOut = async () => {
   const userLoggedIn = await isLoggedIn();
   // if a session is active, invalidate the Compass API token
   if (userLoggedIn) {
-    customFetch('/login/Logout', {
-      method: 'POST',
+    authenticatedFetch("/api/logout", {
+      method: "POST",
     });
   }
-  removeDefaultRequestHeader('Authorization');
-  localStorage.removeItem('requestToken');
+  removeDefaultRequestHeader("Authorization");
+  localStorage.removeItem("requestToken");
 };

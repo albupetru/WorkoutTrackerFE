@@ -1,52 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
-} from '@tanstack/react-table';
-import tableConfiguration from '../tableConfiguration';
-import './style.scss';
+} from "@tanstack/react-table";
+import tableConfiguration from "../tableConfiguration";
+import { authenticatedFetch } from "../../../utils/requestUtils";
+import { ExerciseTableFilters } from "../../../types/exerciseTableFilters.type";
+import "./style.scss";
 
-const defaultData = [
-  {
-    name: 'Bench Press',
-    repetitions: 10,
-    sets: 3,
-  },
-  {
-    name: 'Squats',
-    repetitions: 15,
-    sets: 3,
-  },
-  {
-    name: 'Deadlifts',
-    repetitions: 8,
-    sets: 3,
-  },
-];
+const ExerciseTable = (filterState: ExerciseTableFilters) => {
+  const [data, setData] = useState([]);
 
-const ExerciseTable = () => {
-  const [data, setData] = useState(defaultData);
-
-  //   // If defining columns inside a component, you should still try to give the column definitions a stable identity.
-  //   // This will help with performance and prevent unnecessary re-renders.
-  //   const columns = useMemo(
-  //     () => [
-  //       {
-  //         header: "Exercise Name",
-  //         accessorKey: "name",
-  //       },
-  //       {
-  //         header: "Repetitions",
-  //         accessorKey: "repetitions",
-  //       },
-  //       {
-  //         header: "Sets",
-  //         accessorKey: "sets",
-  //       },
-  //     ],
-  //     [],
-  //   );
+  useEffect(() => {
+    const { searchText } = filterState;
+    authenticatedFetch(`https://localhost:7164/exercise?search=${searchText}`)
+      .then((response) => response.json())
+      .then(({ results }) => {
+        setData(results);
+      });
+  }, []);
 
   const { getHeaderGroups, getRowModel } = useReactTable({
     data,
