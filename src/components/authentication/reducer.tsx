@@ -1,10 +1,12 @@
-import intialState from './initialState';
-import { SET_USER, CLEAR_USER } from './reducerActionTypes';
-import { AuthReducerAction } from '../../types/authReducerAction.type';
-import { UserData } from '../../types/userData.type';
+import intialState from "./initialState";
+import { SET_USER, CLEAR_USER } from "./reducerActionTypes";
+import { AuthReducerAction } from "../../types/authReducerAction.type";
+import { UserData } from "../../types/userData.type";
 
-
-const reducer = (state: UserData = intialState, action: AuthReducerAction): UserData => {
+const reducer = (
+  state: UserData = intialState,
+  action: AuthReducerAction,
+): UserData => {
   switch (action.type) {
     case SET_USER:
       return {
@@ -15,6 +17,7 @@ const reducer = (state: UserData = intialState, action: AuthReducerAction): User
     case CLEAR_USER:
       return {
         ...intialState,
+        loading: false,
         userLoaded: false,
       };
     default:

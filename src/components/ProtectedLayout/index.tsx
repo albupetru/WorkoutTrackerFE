@@ -4,7 +4,7 @@ import { isLoggedIn } from "../authentication/authManager";
 import useAuth from "../authentication/useAuth";
 
 const ProtectedLayout = () => {
-  const { userLoaded, onLogOut } = useAuth();
+  const { userLoaded, loading, onLogOut } = useAuth();
   const outlet = useOutlet();
   const location = useLocation();
 
@@ -14,13 +14,18 @@ const ProtectedLayout = () => {
       const userLogged = await isLoggedIn();
       console.log("userLogged", userLogged);
       console.log("userLoaded", userLoaded);
-      if (!userLogged) {
+      if (!userLogged && userLoaded) {
         await onLogOut();
       }
     };
 
     checkUserStatus();
   }, [location]);
+
+  // Wait for auth initialization to complete
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!userLoaded) {
     return <Navigate to="/login" />;

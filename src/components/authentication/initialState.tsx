@@ -1,7 +1,7 @@
 import { UserData } from "../../types/userData.type";
 
 const initialState: UserData = {
-  loading: false,
+  loading: true,
   error: false,
   requestToken: null,
   name: null,
