@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
 import tableConfiguration from "../tableConfiguration";
-import { authenticatedFetch } from "../../../utils/requestUtils";
+import { useExercises } from "../../../hooks/useExercises";
 import { ExerciseTableFilters } from "../../../types/exerciseTableFilters.type";
 import "./style.scss";
 
@@ -14,22 +13,34 @@ const ExerciseTable = ({
 }: {
   filterState: ExerciseTableFilters;
 }) => {
-  const [data, setData] = useState([]);
+  const { data, isLoading, isError, error } = useExercises({
+    search: filterState.searchText,
+    tags: filterState.selectedTags,
+  });
 
-  useEffect(() => {
-    const { searchText } = filterState;
-    authenticatedFetch(`https://localhost:7164/exercise?search=${searchText}`)
-      .then((response) => response.json())
-      .then(({ results }) => {
-        setData(results);
-      });
-  }, []);
+  const exercises = data?.results || [];
 
   const { getHeaderGroups, getRowModel } = useReactTable({
-    data,
+    data: exercises,
     columns: tableConfiguration,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  if (isLoading) {
+    return (
+      <div className="exercise-table-loading">
+        <p>Loading exercises...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="exercise-table-error">
+        <p>Error loading exercises: {error.message}</p>
+      </div>
+    );
+  }
 
   return (
     <table className="exercise-table">
@@ -37,7 +48,7 @@ const ExerciseTable = ({
         {getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <th id={header.id}>
+              <th key={header.id}>
                 {header.isPlaceholder
                   ? null
                   : flexRender(
