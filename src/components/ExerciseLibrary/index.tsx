@@ -8,7 +8,7 @@ const defaultFilterState: ExerciseTableFilters = {
 };
 
 const ExerciseLibrary = () => {
-  const [filterState, setFilterState] =
+  const [filterState, _setFilterState] =
     useState<ExerciseTableFilters>(defaultFilterState);
 
   return (

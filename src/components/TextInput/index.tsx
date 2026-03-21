@@ -1,5 +1,4 @@
 import { ChangeEvent } from "react";
-import PropTypes from "prop-types";
 import { stringIsNullUndefOrEmpty } from "../../utils/textUtils";
 
 type TextInputProps = {
@@ -32,13 +31,6 @@ const TextInput = ({
       </label>
     </div>
   );
-};
-
-TextInput.propTypes = {
-  value: PropTypes.string,
-  label: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  isPassword: PropTypes.bool,
 };
 
 export default TextInput;

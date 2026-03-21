@@ -1,15 +1,15 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import Button from '../Button';
-import './style.scss';
-import useAuth from '../authentication/useAuth';
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import Button from "../Button";
+import "./style.scss";
+import useAuth from "../authentication/useAuth";
 
 const Layout = () => {
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
   const { onLogOut } = useAuth();
 
   const onLogOutClick = async () => {
     await onLogOut();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (

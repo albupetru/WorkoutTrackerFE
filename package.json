@@ -13,26 +13,27 @@
     "@react-oauth/google": "^0.12.1",
     "@stylistic/eslint-plugin-ts": "^1.7.0",
     "@tanstack/react-table": "^8.15.3",
-    "@testing-library/react": "^14.2.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.0",
     "jwt-decode": "^4.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "react-router-dom": "^6.22.3",
     "sass": "^1.72.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^5.0.1",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@typescript-eslint/parser": "^7.4.0",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint": "^8.52.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "prettier": "^3.1.0",
     "prettier-eslint": "^16.1.2",
-    "typescript": "^4.4.4",
-    "vite": "^5.2.0"
+    "typescript": "^5.9.3",
+    "vite": "^8.0.1"
   }
 }

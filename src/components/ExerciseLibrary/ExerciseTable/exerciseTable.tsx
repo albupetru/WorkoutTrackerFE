@@ -9,7 +9,11 @@ import { authenticatedFetch } from "../../../utils/requestUtils";
 import { ExerciseTableFilters } from "../../../types/exerciseTableFilters.type";
 import "./style.scss";
 
-const ExerciseTable = (filterState: ExerciseTableFilters) => {
+const ExerciseTable = ({
+  filterState,
+}: {
+  filterState: ExerciseTableFilters;
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
