@@ -79,7 +79,7 @@ The API will start on `https://localhost:7164`
 Open a new terminal and navigate to the frontend directory:
 
 ```bash
-cd "workoutTrackerClientApp_TS/workoutTrackerClientApp"
+cd "Workout Tracker FE"
 ```
 
 Install dependencies:
