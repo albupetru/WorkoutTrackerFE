@@ -24,9 +24,6 @@ export function useExercises(filters: ExerciseFilters = {}) {
       if (filters.tagIds) {
         filters.tagIds.forEach((id) => params.append("tagIds", id));
       }
-      if (filters.movementType) {
-        params.append("movementType", filters.movementType);
-      }
       if (filters.includeUnverified) {
         params.append("includeUnverified", "true");
       }

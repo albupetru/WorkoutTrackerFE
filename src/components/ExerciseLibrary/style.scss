@@ -1,0 +1,165 @@
+.exercise-library {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.library-header h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+
+.library-header button {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.library-header button:hover {
+  background-color: #0052a3;
+}
+
+// Tag cell styles (used in tableConfiguration)
+.tags-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.tag-chip {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  background: #e9ecef;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: #495057;
+}
+
+.tag-more {
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+// Exercise table container and table styles
+.exercise-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.exercise-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.exercise-table th {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.exercise-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+  color: #333;
+}
+
+.exercise-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.exercise-table button {
+  background: none;
+  border: none;
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: inherit;
+}
+
+.exercise-table button:hover {
+  color: #0052a3;
+}
+
+// Loading, error, and empty states
+.exercise-table-loading,
+.exercise-table-error,
+.exercise-table-empty {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.exercise-table-loading {
+  color: #333;
+}
+
+.exercise-table-loading .spinner {
+  font-size: 2rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.exercise-table-error {
+  color: #721c24;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 2rem;
+}
+
+.exercise-table-error button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.exercise-table-error button:hover {
+  background: #c82333;
+}
+
+.exercise-table-empty {
+  color: #6c757d;
+}
+
+.exercise-table-empty .subtitle {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  color: #adb5bd;
+}
+

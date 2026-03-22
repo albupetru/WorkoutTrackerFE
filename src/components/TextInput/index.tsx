@@ -6,6 +6,7 @@ type TextInputProps = {
   label?: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   isPassword?: boolean;
+  placeholder?: string;
 };
 
 const TextInput = ({
@@ -13,13 +14,19 @@ const TextInput = ({
   label,
   onChange,
   isPassword = false,
+  placeholder,
 }: TextInputProps) => {
   const type = isPassword ? "password" : "text";
 
   if (label === null || stringIsNullUndefOrEmpty(label)) {
     return (
       <div className="text-input">
-        <input type={type} value={value} onChange={onChange} />
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+        />
       </div>
     );
   }
@@ -27,7 +34,13 @@ const TextInput = ({
   return (
     <div className="text-input">
       <label>
-        {label}: <input type={type} value={value} onChange={onChange} />
+        {label}:{" "}
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+        />
       </label>
     </div>
   );

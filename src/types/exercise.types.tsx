@@ -5,7 +5,6 @@ export interface Exercise {
   name: string;
   description?: string;
   instructions?: string;
-  movementType?: string;
   createdById: string;
   createdByName: string;
   createdOn: string;
@@ -22,7 +21,6 @@ export const isExerciseVerified = (exercise: Exercise): boolean => {
 export interface ExerciseFilters {
   keyword?: string;
   tagIds?: string[];
-  movementType?: string;
   includeUnverified?: boolean;
   pageNumber?: number;
   pageSize?: number;
@@ -41,7 +39,6 @@ export interface CreateExerciseDto {
   name: string;
   description?: string;
   instructions?: string;
-  movementType?: string;
   tagIds: string[];
 }
 

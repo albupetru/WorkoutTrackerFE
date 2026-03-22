@@ -1,0 +1,17 @@
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-badge--verified {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge--pending {
+  background: #fff3cd;
+  color: #856404;
+}
