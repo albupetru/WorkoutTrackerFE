@@ -1,16 +1,189 @@
-body {
-  margin: 0;
-  padding: 0;
+.sidebar {
+  position: fixed;
+  width: 256px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: var(--color-background);
+  border-right: 1px solid rgba(72, 72, 71, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+  z-index: 50;
   box-sizing: border-box;
 }
 
-.menu-list {
+.sidebar-logo {
+  font-family: "Lexend", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  font-size: 1.75rem;
+  color: var(--color-primary-dim);
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-user {
   display: flex;
-  justify-content: space-around;
-  list-style-type: none;
-  padding: 1em 0;
-  position: fixed;
-  top: 0;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.sidebar-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-surface-container-highest);
+  border: 1px solid rgba(72, 72, 71, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Lexend", sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--color-on-surface);
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.sidebar-user-name {
+  font-family: "Lexend", sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--color-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-subtitle {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.7rem;
+  color: var(--color-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.25rem;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  color: var(--color-on-surface-variant);
+  font-family: "Lexend", sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-left: 4px solid transparent;
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  &:hover {
+    background: var(--color-surface-container-low);
+    color: var(--color-on-surface);
+  }
+
+  &.active {
+    color: var(--color-primary-dim);
+    background: var(--color-surface-container);
+    border-left-color: var(--color-primary-dim);
+  }
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
+  margin-top: auto;
+}
+
+.sidebar-start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   width: 100%;
-  background-color: #f8f8f800; // Change this as needed
+  padding: 0.75rem 1rem;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dim)
+  );
+  color: #3a4a00;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: "Lexend", sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.9;
+    border-color: transparent;
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
+.sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  color: var(--color-on-surface-variant);
+  border: 1px solid rgba(72, 72, 71, 0.2);
+  border-radius: 0.5rem;
+  font-family: "Lexend", sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+
+  &:hover {
+    background: var(--color-surface-container-low);
+    color: var(--color-on-surface);
+    border-color: rgba(72, 72, 71, 0.4);
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
+.main-content {
+  margin-left: 256px;
+  min-height: 100vh;
 }

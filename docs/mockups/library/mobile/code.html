@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Volum - Exercise Library</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#526900",
+                        "on-primary-container": "#4a5e00",
+                        "primary-fixed": "#cafd00",
+                        "surface-tint": "#f3ffca",
+                        "secondary-fixed": "#26e6ff",
+                        "secondary-container": "#006875",
+                        "outline": "#767575",
+                        "primary-container": "#cafd00",
+                        "on-tertiary-container": "#5d5000",
+                        "on-secondary": "#004d57",
+                        "on-tertiary-fixed-variant": "#685900",
+                        "on-primary": "#516700",
+                        "tertiary-fixed-dim": "#edd13a",
+                        "on-background": "#ffffff",
+                        "primary-dim": "#beee00",
+                        "primary": "#f3ffca",
+                        "surface-variant": "#262626",
+                        "error": "#ff7351",
+                        "secondary": "#00e3fd",
+                        "on-error": "#450900",
+                        "surface-container-low": "#131313",
+                        "error-container": "#b92902",
+                        "on-surface-variant": "#adaaaa",
+                        "error-dim": "#d53d18",
+                        "primary-fixed-dim": "#beee00",
+                        "secondary-fixed-dim": "#00d7f0",
+                        "surface-dim": "#0e0e0e",
+                        "on-secondary-fixed": "#003a42",
+                        "on-tertiary": "#665800",
+                        "inverse-primary": "#516700",
+                        "background": "#0e0e0e",
+                        "tertiary": "#ffeea5",
+                        "surface-container-highest": "#262626",
+                        "on-secondary-fixed-variant": "#005964",
+                        "outline-variant": "#484847",
+                        "tertiary-fixed": "#fce047",
+                        "on-primary-fixed": "#3a4a00",
+                        "on-error-container": "#ffd2c8",
+                        "surface-container-lowest": "#000000",
+                        "surface": "#0e0e0e",
+                        "on-surface": "#ffffff",
+                        "surface-bright": "#2c2c2c",
+                        "tertiary-container": "#fce047",
+                        "inverse-on-surface": "#565555",
+                        "inverse-surface": "#fcf9f8",
+                        "tertiary-dim": "#edd13a",
+                        "secondary-dim": "#00d4ec",
+                        "on-secondary-container": "#e8fbff",
+                        "surface-container-high": "#20201f",
+                        "on-tertiary-fixed": "#483d00",
+                        "surface-container": "#1a1a1a"
+                    },
+                    fontFamily: {
+                        "headline": ["Lexend"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .anodic-gradient {
+            background: linear-gradient(135deg, #f3ffca 0%, #cafd00 100%);
+        }
+        body {
+            min-height: 100dvh;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body select-none">
+<!-- Main Top Navigation -->
+<header class="fixed top-0 w-full z-50 bg-[#0e0e0e]/90 backdrop-blur-xl border-b border-[#484847]/15 px-6 py-4 flex justify-between items-center max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black italic tracking-tighter text-[#ccff00]">Volum</div>
+<div class="hidden md:flex gap-8 items-center">
+<nav class="flex gap-6 font-headline tracking-tight text-sm uppercase font-bold">
+<a class="text-[#ccff00] font-bold border-b-2 border-[#ccff00]" href="#">Library</a>
+<a class="text-[#adaaaa] hover:text-[#ccff00] transition-colors duration-300" href="#">Workouts</a>
+<a class="text-[#adaaaa] hover:text-[#ccff00] transition-colors duration-300" href="#">Progress</a>
+<a class="text-[#adaaaa] hover:text-[#ccff00] transition-colors duration-300" href="#">Profile</a>
+</nav>
+</div>
+</header>
+<main class="pt-16 pb-32 max-w-md mx-auto">
+<!-- Search & Quick Filter Section - Moved to very top -->
+<div class="sticky top-[64px] z-40 bg-background/95 backdrop-blur-sm px-4 pt-2 pb-2 border-b border-outline-variant/10">
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+</div>
+<input class="w-full bg-surface-container-high border-none rounded-lg py-3 pl-11 pr-4 text-on-surface font-label text-sm focus:ring-1 focus:ring-secondary/50 placeholder:text-on-surface-variant" placeholder="Search library..." type="text"/>
+</div>
+<div class="mt-2 flex items-center gap-2 overflow-x-auto hide-scrollbar">
+<!-- Dropdown-style Selector Button -->
+<button class="flex items-center gap-2 bg-secondary-container text-on-secondary-container px-3 py-2 rounded-lg flex-shrink-0 transition-transform active:scale-95">
+<span class="text-[10px] font-bold font-headline uppercase tracking-tight">Muscle: All</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 bg-surface-container-highest text-on-surface-variant px-3 py-2 rounded-lg flex-shrink-0">
+<span class="text-[10px] font-bold font-headline uppercase tracking-tight">Equipment</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant/30 flex-shrink-0 mx-1"></div>
+<button class="flex items-center gap-1.5 bg-surface-container-high px-3 py-2 rounded-lg border border-outline-variant/15 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-secondary text-sm">filter_list</span>
+<span class="text-[10px] font-bold font-headline uppercase tracking-tight">More</span>
+</button>
+</div>
+</div>
+<!-- High-Density Exercise List Container -->
+<div class="divide-y divide-outline-variant/10 mt-0">
+<!-- Exercise Row - Compact -->
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Barbell Bench Press</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Chest</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Compound</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Dumbbell Lateral Raise</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Shoulders</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Isolation</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Romanian Deadlift</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Hamstrings</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Posterior</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Weighted Pull-Up</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Back</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Vertical</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Face Pulls</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Rear Delts</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Posture</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Incline DB Press</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Upper Chest</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Strength</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Bulgarian Split Squat</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Quads</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Unilateral</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Zottman Curl</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Biceps</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Forearms</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-4 py-3 bg-surface-container-low hover:bg-surface-container-high transition-colors duration-200 group">
+<div class="flex-1 min-w-0 pr-4">
+<h3 class="font-headline font-extrabold text-[13px] uppercase tracking-tight truncate text-on-surface mb-0.5">Tricep Pushdowns</h3>
+<div class="flex items-center gap-2">
+<span class="text-secondary text-[9px] font-bold uppercase tracking-wider">Triceps</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant/50"></span>
+<span class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Cable</span>
+</div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-md bg-surface-container border border-outline-variant/10 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-base">info</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed right-6 bottom-24 w-12 h-12 anodic-gradient rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(202,253,0,0.3)] z-40 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-on-primary-fixed text-2xl font-bold">add</span>
+</button>
+<!-- Bottom Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-[#0e0e0e]/95 backdrop-blur-xl flex justify-around items-center px-4 py-3 border-t border-outline-variant/10">
+<a class="flex flex-col items-center gap-1 group text-[#ccff00]" href="#">
+<span class="material-symbols-outlined text-2xl font-variation-settings-fill group-active:scale-90 duration-200" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<span class="text-[9px] font-bold font-headline tracking-widest uppercase">Library</span>
+</a>
+<a class="flex flex-col items-center gap-1 group text-[#adaaaa]" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-90 duration-200">calendar_today</span>
+<span class="text-[9px] font-bold font-headline tracking-widest uppercase">Workouts</span>
+</a>
+<a class="flex flex-col items-center gap-1 group text-[#adaaaa]" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-90 duration-200">insights</span>
+<span class="text-[9px] font-bold font-headline tracking-widest uppercase">Progress</span>
+</a>
+<a class="flex flex-col items-center gap-1 group text-[#adaaaa]" href="#">
+<span class="material-symbols-outlined text-2xl group-active:scale-90 duration-200">person</span>
+<span class="text-[9px] font-bold font-headline tracking-widest uppercase">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -34,11 +34,11 @@ src/
 ## Component Conventions
 
 ### File Organization
-- **One component per folder** — folder name is the component name
-- **Entry point**: always `index.tsx` (not `ComponentName.tsx`)
+- **One component per folder** — folder name is the component name (PascalCase)
+- **Entry point**: always `index.tsx` (not `ComponentName.tsx`) — this allows importing by folder name without specifying a filename
 - **Styles**: co-located `style.scss` in the same folder
-- **Sub-components**: nested folders under parent (e.g., `ExerciseLibrary/ExerciseTable/`)
-- **Related config**: co-located (e.g., `tableConfiguration.tsx` next to the table component)
+- **Sub-components**: components used exclusively by one parent component live inside that parent's folder, each in their own named subfolder (e.g., `ExerciseLibrary/ExerciseTable/`, `ExerciseLibrary/Pagination/`). Components shared across multiple features go in `src/components/` directly.
+- **Related config**: co-located helper files (e.g., `tableConfiguration.tsx`) stay in the component folder alongside `index.tsx`
 
 ### Component Pattern
 - **Functional components only** (no class components)

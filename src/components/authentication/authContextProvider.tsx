@@ -12,6 +12,7 @@ export type AuthDataContextType = {
   onTokenRefresh: () => Promise<UserData | null>;
   userLoaded: boolean;
   loading: boolean;
+  name: string | null;
 
   // Role checks
   role: UserRole | null;

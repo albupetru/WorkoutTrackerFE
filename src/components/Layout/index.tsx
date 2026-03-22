@@ -1,33 +1,87 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import Button from "../Button";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./style.scss";
 import useAuth from "../authentication/useAuth";
 
 const Layout = () => {
   const navigate = useNavigate();
-  const { onLogOut } = useAuth();
+  const location = useLocation();
+  const { onLogOut, name } = useAuth();
 
   const onLogOutClick = async () => {
     await onLogOut();
     navigate("/login");
   };
 
+  const initials = name
+    ? name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "??";
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <div>
-      <div>
-        <ul className="menu-list">
-          <li>
-            <Link to="/">Dashboard</Link>
-          </li>
-          <li>
-            <Link to="/exercise-library">Exercise Library</Link>
-          </li>
-          <li>
-            <Button onClick={onLogOutClick}>Logout</Button>
-          </li>
-        </ul>
-      </div>
-      <Outlet />
+      <aside className="sidebar">
+        <div className="sidebar-logo">Volum</div>
+
+        <div className="sidebar-user">
+          <div className="sidebar-user-avatar">{initials}</div>
+          <div className="sidebar-user-info">
+            <span className="sidebar-user-name">{name || "User"}</span>
+            <span className="sidebar-user-subtitle">Elite Performance</span>
+          </div>
+        </div>
+
+        <nav className="sidebar-nav">
+          <Link
+            to="/exercise-library"
+            className={`sidebar-nav-item${isActive("/exercise-library") ? " active" : ""}`}
+          >
+            <span className="material-symbols-outlined">fitness_center</span>
+            Library
+          </Link>
+          <Link
+            to="/"
+            className={`sidebar-nav-item${isActive("/workouts") ? " active" : ""}`}
+          >
+            <span className="material-symbols-outlined">calendar_today</span>
+            Workouts
+          </Link>
+          <Link
+            to="/"
+            className={`sidebar-nav-item${isActive("/progress") ? " active" : ""}`}
+          >
+            <span className="material-symbols-outlined">trending_up</span>
+            Progress
+          </Link>
+          <Link
+            to="/"
+            className={`sidebar-nav-item${isActive("/profile") ? " active" : ""}`}
+          >
+            <span className="material-symbols-outlined">person</span>
+            Profile
+          </Link>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button className="sidebar-start-btn">
+            <span className="material-symbols-outlined">play_arrow</span>
+            Start Workout
+          </button>
+          <button className="sidebar-logout-btn" onClick={onLogOutClick}>
+            <span className="material-symbols-outlined">logout</span>
+            Log out
+          </button>
+        </div>
+      </aside>
+
+      <main className="main-content">
+        <Outlet />
+      </main>
     </div>
   );
 };

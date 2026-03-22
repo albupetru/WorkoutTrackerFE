@@ -3,24 +3,34 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
+import { useEffect } from "react";
 import tableConfiguration from "./tableConfiguration";
 import { useExercises } from "../../../api/exercises";
-import { ExerciseFilters } from "../../../types/exercise.types";
-import Pagination from "../Pagination/Pagination";
+import { ExerciseFilters } from "../../../types/exercise.types.tsx";
+import Pagination from "../Pagination";
 import "./style.scss";
 
 interface ExerciseTableProps {
   filters: ExerciseFilters;
   onPageChange: (page: number) => void;
+  onTotalCountChange: (count: number) => void;
 }
 
-const ExerciseTable = ({ filters, onPageChange }: ExerciseTableProps) => {
+const ExerciseTable = ({
+  filters,
+  onPageChange,
+  onTotalCountChange,
+}: ExerciseTableProps) => {
   const { data, isLoading, isError, error, refetch } = useExercises(filters);
 
   const exercises = data?.exercises || [];
   const totalCount = data?.totalCount || 0;
   const pageNumber = data?.pageNumber || 1;
   const pageSize = data?.pageSize || 20;
+
+  useEffect(() => {
+    onTotalCountChange(totalCount);
+  }, [totalCount]);
 
   const { getHeaderGroups, getRowModel } = useReactTable({
     data: exercises,
@@ -31,7 +41,7 @@ const ExerciseTable = ({ filters, onPageChange }: ExerciseTableProps) => {
   if (isLoading) {
     return (
       <div className="exercise-table-loading">
-        <div className="spinner">⌛</div>
+        <span className="material-symbols-outlined">hourglass_empty</span>
         <p>Loading exercises...</p>
       </div>
     );
@@ -49,16 +59,15 @@ const ExerciseTable = ({ filters, onPageChange }: ExerciseTableProps) => {
   if (exercises.length === 0) {
     return (
       <div className="exercise-table-empty">
+        <span className="material-symbols-outlined">search_off</span>
         <p>No exercises found</p>
-        <p className="subtitle">
-          Try adjusting your filters or add a new exercise
-        </p>
+        <p className="subtitle">Try adjusting your filters</p>
       </div>
     );
   }
 
   return (
-    <div className="exercise-table-container">
+    <div className="exercise-list-container">
       <table className="exercise-table">
         <thead>
           {getHeaderGroups().map((headerGroup) => (
@@ -77,17 +86,15 @@ const ExerciseTable = ({ filters, onPageChange }: ExerciseTableProps) => {
           ))}
         </thead>
         <tbody>
-          {getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
+          {getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
 

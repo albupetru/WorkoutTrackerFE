@@ -1,17 +1,9 @@
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-div {
+.login-page {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 
   h1 {
     margin-bottom: 1em;
@@ -25,7 +17,7 @@ div {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 200px; // Adjust this value as needed
+      width: 200px;
       margin-bottom: 1em;
 
       label {
@@ -38,8 +30,8 @@ div {
     }
 
     button {
-      max-width: 200px; // Adjust this value as needed
-      margin: 0 auto; // Center the button
+      max-width: 200px;
+      margin: 0 auto;
     }
   }
 }

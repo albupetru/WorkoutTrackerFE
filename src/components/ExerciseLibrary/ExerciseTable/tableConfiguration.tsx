@@ -1,52 +1,48 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Exercise } from "../../../types/exercise.types";
-import StatusBadge from "../StatusBadge/StatusBadge";
-import ActionButtons from "../ActionButtons/ActionButtons";
-import NameCell from "../NameCell/NameCell";
+import { Exercise } from "../../../types/exercise.types.tsx";
+import NameCell from "../NameCell";
 
 const tableConfiguration: ColumnDef<Exercise>[] = [
   {
-    header: "Exercise Name",
+    header: () => (
+      <span className="th-inner">
+        Movement Pattern
+        <span className="material-symbols-outlined th-sort-icon">
+          swap_vert
+        </span>
+      </span>
+    ),
     accessorKey: "name",
     cell: ({ row }) => (
-      <NameCell exerciseId={row.original.id} exerciseName={row.original.name} />
+      <NameCell
+        exerciseId={row.original.id}
+        exerciseName={row.original.name}
+        description={row.original.description}
+      />
     ),
   },
   {
-    header: "Tags",
+    header: () => (
+      <span className="th-inner">
+        Tags
+        <span className="material-symbols-outlined th-sort-icon">
+          swap_vert
+        </span>
+      </span>
+    ),
     accessorKey: "tags",
     cell: ({ row }) => {
       const tags = row.original.tags || [];
-      const visibleTags = tags.slice(0, 3);
-      const remainingCount = tags.length - 3;
-
       return (
         <div className="tags-cell">
-          {visibleTags.map((tag) => (
+          {tags.map((tag) => (
             <span key={tag.id} className="tag-chip">
               {tag.name}
             </span>
           ))}
-          {remainingCount > 0 && (
-            <span className="tag-more">+{remainingCount} more</span>
-          )}
         </div>
       );
     },
-  },
-  {
-    header: "Status",
-    accessorKey: "verifiedOn",
-    cell: ({ row }) => <StatusBadge exercise={row.original} />,
-  },
-  {
-    header: "Submitted By",
-    accessorKey: "createdByName",
-  },
-  {
-    header: "Actions",
-    id: "actions",
-    cell: ({ row }) => <ActionButtons exercise={row.original} />,
   },
 ];
 
