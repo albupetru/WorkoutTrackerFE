@@ -154,33 +154,11 @@
 }
 
 .sidebar-logout-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.6rem 1rem;
+  margin: 0;
+  border: none;
   background: transparent;
-  color: var(--color-on-surface-variant);
-  border: 1px solid rgba(72, 72, 71, 0.2);
-  border-radius: 0.5rem;
-  font-family: "Lexend", sans-serif;
-  font-weight: 500;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    color 0.15s;
-
-  &:hover {
-    background: var(--color-surface-container-low);
-    color: var(--color-on-surface);
-    border-color: rgba(72, 72, 71, 0.4);
-  }
-
-  .material-symbols-outlined {
-    font-size: 18px;
-  }
+  color: #c4ab04;
+  padding-left: calc(1.5rem + 4px);
 }
 
 .main-content {

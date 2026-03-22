@@ -5,7 +5,7 @@ import useAuth from "../authentication/useAuth";
 const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { onLogOut, name } = useAuth();
+  const { onLogOut, name, role } = useAuth();
 
   const onLogOutClick = async () => {
     await onLogOut();
@@ -32,7 +32,7 @@ const Layout = () => {
           <div className="sidebar-user-avatar">{initials}</div>
           <div className="sidebar-user-info">
             <span className="sidebar-user-name">{name || "User"}</span>
-            <span className="sidebar-user-subtitle">Elite Performance</span>
+            <span className="sidebar-user-subtitle">{role || "Role"}</span>
           </div>
         </div>
 
@@ -65,16 +65,19 @@ const Layout = () => {
             <span className="material-symbols-outlined">person</span>
             Profile
           </Link>
+          <button
+            className="sidebar-nav-item sidebar-logout-btn"
+            onClick={onLogOutClick}
+          >
+            <span className="material-symbols-outlined">logout</span>
+            Log out
+          </button>
         </nav>
 
         <div className="sidebar-footer">
           <button className="sidebar-start-btn">
             <span className="material-symbols-outlined">play_arrow</span>
             Start Workout
-          </button>
-          <button className="sidebar-logout-btn" onClick={onLogOutClick}>
-            <span className="material-symbols-outlined">logout</span>
-            Log out
           </button>
         </div>
       </aside>

@@ -9,11 +9,15 @@ import { CodeResponse } from "@react-oauth/google";
 import { UserData } from "../../types/userData.type";
 import { UserRole } from "../../types/UserRole.type";
 
+const CLAIM_NAME = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
+const CLAIM_ROLE =
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+
 interface JwtPayload {
   email: string;
   oid: string;
-  name: string;
-  role: string;
+  [CLAIM_NAME]: string;
+  [CLAIM_ROLE]: string;
   exp: number;
 }
 
@@ -51,11 +55,11 @@ export const setupUser = async (): Promise<UserData | null> => {
 
   if (requestToken !== null) {
     const apiToken = jwtDecode(requestToken) as JwtPayload;
-
+    console.log("apiToken", apiToken);
     const email = apiToken.email;
     const userId = apiToken.oid;
-    const name = apiToken.name;
-    const role = (apiToken.role as UserRole) || null;
+    const name = apiToken[CLAIM_NAME];
+    const role = (apiToken[CLAIM_ROLE] as UserRole) || null;
 
     return {
       loading: false,

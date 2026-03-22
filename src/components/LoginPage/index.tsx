@@ -34,7 +34,7 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <h1>Workout Tracker</h1>
+      <h1 className="login-logo">Volum</h1>
       <div className="login-fields-container">
         <Button onClick={handleLogin}>Login</Button>
       </div>

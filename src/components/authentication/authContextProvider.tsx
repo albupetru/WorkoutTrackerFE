@@ -39,6 +39,7 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
         const loggedIn = await isLoggedIn();
         if (loggedIn) {
           const userdata = await setupUser();
+          console.log("userdata", userdata);
           if (userdata) {
             dispatch(setUser({ ...userdata, loading: false }));
           } else {
