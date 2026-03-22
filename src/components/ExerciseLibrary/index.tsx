@@ -35,6 +35,15 @@ const ExerciseLibrary = () => {
     setFilters((f) => ({ ...f, pageNumber: newPage }));
   };
 
+  const handleSortChange = (column: string) => {
+    setFilters((f) => ({
+      ...f,
+      sortBy: column,
+      sortOrder: f.sortBy === column && f.sortOrder === "asc" ? "desc" : "asc",
+      pageNumber: 1,
+    }));
+  };
+
   const handleCategoryApply = (tagIds: string[]) => {
     setFilters((f) => ({ ...f, tagIds, pageNumber: 1 }));
   };
@@ -90,6 +99,7 @@ const ExerciseLibrary = () => {
           filters={filters}
           onPageChange={handlePageChange}
           onTotalCountChange={setTotalCount}
+          onSortChange={handleSortChange}
         />
       </div>
     </div>

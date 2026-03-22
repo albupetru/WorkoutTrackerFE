@@ -3,7 +3,7 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import tableConfiguration from "./tableConfiguration";
 import { useExercises } from "../../../api/exercises";
 import { ExerciseFilters } from "../../../types/exercise.types.tsx";
@@ -14,12 +14,14 @@ interface ExerciseTableProps {
   filters: ExerciseFilters;
   onPageChange: (page: number) => void;
   onTotalCountChange: (count: number) => void;
+  onSortChange: (column: string) => void;
 }
 
 const ExerciseTable = ({
   filters,
   onPageChange,
   onTotalCountChange,
+  onSortChange,
 }: ExerciseTableProps) => {
   const { data, isLoading, isError, error, refetch } = useExercises(filters);
 
@@ -32,9 +34,19 @@ const ExerciseTable = ({
     onTotalCountChange(totalCount);
   }, [totalCount]);
 
+  const columns = useMemo(
+    () =>
+      tableConfiguration({
+        sortBy: filters.sortBy ?? "name",
+        sortOrder: filters.sortOrder ?? "asc",
+        onSortChange,
+      }),
+    [filters.sortBy, filters.sortOrder, onSortChange],
+  );
+
   const { getHeaderGroups, getRowModel } = useReactTable({
     data: exercises,
-    columns: tableConfiguration,
+    columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
