@@ -253,6 +253,70 @@ export const stringIsNullUndefOrEmpty = (str: string | null | undefined) =>
 - Dev server proxy: `/api` → `https://localhost:7164` (strips `/api` prefix)
 - TypeScript `noEmit: true` (Vite handles compilation)
 
+## Playwright MCP & Test Authentication
+
+**Purpose**: Enable autonomous UI validation using Playwright MCP tools after making UI changes.
+
+### CRITICAL: Backend runs on HTTPS port 7164
+Test auth endpoint: `https://localhost:7164/api/testauth/{role}`
+
+### Correct MCP Authentication Pattern
+```typescript
+// 1. Navigate to test auth endpoint (HTTPS port 7164!)
+await page.goto('https://localhost:7164/api/testauth/admin');
+
+// 2. Extract token from JSON response
+const tokenData = await page.evaluate(() => {
+  return JSON.parse(document.body.textContent);
+});
+const token = tokenData.token;
+
+// 3. Navigate to frontend and inject token
+await page.goto('http://localhost:5173');
+await page.evaluate((t) => {
+  localStorage.setItem('requestToken', t);
+}, token);
+
+// 4. MUST reload page for auth context to initialize
+await page.reload();
+
+// 5. Navigate to target page
+await page.goto('http://localhost:5173/exercise-library');
+
+// 6. Wait for content to load
+await page.waitForTimeout(2000);
+
+// 7. Take screenshot or verify
+await page.screenshot({ fullPage: true, path: 'check.png' });
+```
+
+### Available Test Roles
+- `Trial` - Limited access
+- `User` - Regular authenticated user
+- `ContentModerator` - Can moderate content
+- `Admin` - Full administrative access
+
+### Important Caveats
+- **Theme rendering**: Playwright MCP may show light theme when app uses dark theme
+- **Auth timing**: Components checking `userLoaded` may not render immediately
+- **Always verify in real browser** after Playwright check for accurate visual confirmation
+- **Expected errors**: Tags API 404 is normal in development
+
+### When to Use
+- Quick check after UI/styling changes
+- Verify component rendering
+- Check for obvious layout issues
+- Take screenshots for review
+
+### When NOT to Use
+- Final visual approval (use real browser)
+- Exact color/theme verification
+- Auth flow testing
+
+**Documentation**: See `/tests/README.md` for detailed information.
+
+**Security**: Development-only, requires `TestAuthSettings.Enabled: true`, returns 404 in production.
+
 ## Tech Stack
 - React 19, TypeScript 5
 - React Router v6
