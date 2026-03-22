@@ -6,7 +6,7 @@ const initialState: UserData = {
   requestToken: null,
   name: null,
   email: null,
-  accessToken: null,
+  role: null,
   userId: null,
   userImage: false,
   userLoaded: false,

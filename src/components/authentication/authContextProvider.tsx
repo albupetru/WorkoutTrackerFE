@@ -4,6 +4,7 @@ import initialState from "./initialState";
 import reducer from "./reducer";
 import { setUser, clearUser } from "./reducerActions";
 import { UserData } from "../../types/userData.type";
+import { UserRole } from "../../types/UserRole.type";
 
 export type AuthDataContextType = {
   onLogIn: () => Promise<void>;
@@ -11,6 +12,14 @@ export type AuthDataContextType = {
   onTokenRefresh: () => Promise<UserData | null>;
   userLoaded: boolean;
   loading: boolean;
+
+  // Role checks
+  role: UserRole | null;
+  isAdmin: boolean;
+  isModerator: boolean;
+  isUser: boolean;
+  isTrial: boolean;
+  isAtLeast: (minimumRole: UserRole) => boolean;
 };
 
 export const AuthDataContext = createContext<AuthDataContextType | null>(null);
@@ -39,7 +48,6 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
         } else {
           // Clear invalid/expired token
           localStorage.removeItem("requestToken");
-          localStorage.removeItem("accessToken");
           dispatch(
             setUser({ ...initialState, loading: false, userLoaded: false }),
           );
@@ -48,7 +56,6 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
         console.error("Auth initialization error:", error);
         // Clear potentially corrupted tokens
         localStorage.removeItem("requestToken");
-        localStorage.removeItem("accessToken");
         dispatch(
           setUser({ ...initialState, loading: false, userLoaded: false }),
         );
@@ -78,14 +85,40 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
     dispatch(clearUser());
   };
 
+  // Role checks
+  const role = state.role;
+  const isAdmin = role === "Admin";
+  const isModerator = role === "ContentModerator";
+  const isUser = role === "User";
+  const isTrial = role === "Trial";
+
+  const isAtLeast = (minimumRole: UserRole): boolean => {
+    if (!role) return false;
+
+    const roleHierarchy: Record<UserRole, number> = {
+      Admin: 4,
+      ContentModerator: 3,
+      User: 2,
+      Trial: 1,
+    };
+
+    return roleHierarchy[role] >= roleHierarchy[minimumRole];
+  };
+
   const authState = useMemo(
     () => ({
       ...state,
       onLogIn,
       onLogOut,
       onTokenRefresh,
+      role,
+      isAdmin,
+      isModerator,
+      isUser,
+      isTrial,
+      isAtLeast,
     }),
-    [state],
+    [state, role, isAdmin, isModerator, isUser, isTrial],
   );
 
   return <AuthDataContext.Provider value={authState} {...props} />;

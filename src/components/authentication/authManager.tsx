@@ -7,11 +7,13 @@ import {
 } from "../../utils/requestUtils";
 import { CodeResponse } from "@react-oauth/google";
 import { UserData } from "../../types/userData.type";
+import { UserRole } from "../../types/UserRole.type";
 
 interface JwtPayload {
   email: string;
   oid: string;
   name: string;
+  role: string;
   exp: number;
 }
 
@@ -26,7 +28,7 @@ export const isLoggedIn = async () => {
     return false;
   }
 
-  const apiToken = jwtDecode(decodeURIComponent(requestToken)) as JwtPayload;
+  const apiToken = jwtDecode(requestToken) as JwtPayload;
 
   const { exp } = apiToken;
   const dateNow = new Date();
@@ -47,23 +49,22 @@ export const setupUser = async (): Promise<UserData | null> => {
 
   setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
 
-  const accessToken = localStorage.getItem("accessToken");
-
   if (requestToken !== null) {
-    const apiToken = jwtDecode(decodeURIComponent(requestToken)) as JwtPayload;
+    const apiToken = jwtDecode(requestToken) as JwtPayload;
 
     const email = apiToken.email;
     const userId = apiToken.oid;
     const name = apiToken.name;
+    const role = (apiToken.role as UserRole) || null;
 
     return {
       loading: false,
       error: false,
       userId,
       requestToken,
-      accessToken,
       name,
       email,
+      role,
       userImage: false,
       userLoaded: true,
     };
@@ -83,10 +84,10 @@ export const logIn = (
     body: JSON.stringify({ code: googleResponse.code }),
   })
     .then((response) => response.json())
-    .then((requestToken) => {
+    .then((data) => {
+      const requestToken = typeof data === "string" ? data : data.token;
       localStorage.setItem("requestToken", requestToken);
       setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
-      requestToken;
       successCallback();
     })
     .catch((error) => {
@@ -96,7 +97,7 @@ export const logIn = (
 
 export const logOut = async () => {
   const userLoggedIn = await isLoggedIn();
-  // if a session is active, invalidate the Compass API token
+  // if a session is active, invalidate the API token
   if (userLoggedIn) {
     authenticatedFetch("/api/logout", {
       method: "POST",
