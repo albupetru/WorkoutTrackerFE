@@ -4,7 +4,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import tableConfiguration from "../tableConfiguration";
-import { useExercises } from "../../../hooks/useExercises";
+import { useExercises } from "../../../api/exercises";
 import { ExerciseTableFilters } from "../../../types/exerciseTableFilters.type";
 import "./style.scss";
 
@@ -14,11 +14,11 @@ const ExerciseTable = ({
   filterState: ExerciseTableFilters;
 }) => {
   const { data, isLoading, isError, error } = useExercises({
-    search: filterState.searchText,
-    tags: filterState.selectedTags,
+    keyword: filterState.searchText,
+    tagIds: filterState.selectedTags,
   });
 
-  const exercises = data?.results || [];
+  const exercises = data?.exercises || [];
 
   const { getHeaderGroups, getRowModel } = useReactTable({
     data: exercises,
