@@ -68,32 +68,30 @@ const ExerciseLibrary = () => {
           value={keywordInput}
           onChange={(e) => setKeywordInput(e.target.value)}
         />
+        <CategoryDropdown
+          selectedTagIds={filters.tagIds ?? []}
+          onApply={handleCategoryApply}
+        />
+        <span className="count-display top-bar-count">
+          Displaying {displayedCount} of {totalCount} movements
+        </span>
       </div>
 
       <div className="library-content">
-        <div className="controls-row">
-          <CategoryDropdown
-            selectedTagIds={filters.tagIds ?? []}
-            onApply={handleCategoryApply}
-          />
-          <div className="controls-right">
-            {isAdmin && (
-              <label className="unverified-toggle">
-                <input
-                  type="checkbox"
-                  checked={filters.includeUnverified ?? false}
-                  onChange={(e) =>
-                    handleIncludeUnverifiedChange(e.target.checked)
-                  }
-                />
-                Show unverified
-              </label>
-            )}
-            <span className="count-display">
-              Displaying {displayedCount} of {totalCount} movements
-            </span>
+        {isAdmin && (
+          <div className="controls-row">
+            <label className="unverified-toggle">
+              <input
+                type="checkbox"
+                checked={filters.includeUnverified ?? false}
+                onChange={(e) =>
+                  handleIncludeUnverifiedChange(e.target.checked)
+                }
+              />
+              Show unverified
+            </label>
           </div>
-        </div>
+        )}
 
         <ExerciseTable
           filters={filters}

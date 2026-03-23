@@ -50,15 +50,8 @@
 .controls-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 1.25rem;
   gap: 1rem;
-}
-
-.controls-right {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
 }
 
 .count-display {
@@ -68,6 +61,10 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--color-on-surface-variant);
+}
+
+.top-bar-count {
+  margin-left: auto;
 }
 
 .unverified-toggle {
