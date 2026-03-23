@@ -139,6 +139,10 @@
     border-color: rgba(0, 227, 253, 0.4);
     box-shadow: 0 0 0 1px rgba(0, 227, 253, 0.15);
   }
+
+  &.has-error {
+    border-color: rgba(255, 115, 81, 0.5);
+  }
 }
 
 /* ---- Instructions section ---- */

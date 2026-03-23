@@ -31,6 +31,9 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   const [steps, setSteps] = useState<string[]>([""]);
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [stepsError, setStepsError] = useState("");
+  const [tagsError, setTagsError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -113,7 +116,16 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
 
   const updateStep = (index: number, value: string) => {
     setIsDirty(true);
-    setSteps((prev) => prev.map((s, i) => (i === index ? value : s)));
+    setSteps((prev) => {
+      const next = prev.map((s, i) => (i === index ? value : s));
+      if (submitted)
+        setStepsError(
+          next.some((s) => s.trim())
+            ? ""
+            : "At least one instruction step is required",
+        );
+      return next;
+    });
   };
 
   const removeStep = (index: number) => {
@@ -134,27 +146,50 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
 
   const toggleTag = (tagId: string) => {
     setIsDirty(true);
-    setTagIds((prev) =>
-      prev.includes(tagId)
+    setTagIds((prev) => {
+      const next = prev.includes(tagId)
         ? prev.filter((id) => id !== tagId)
-        : [...prev, tagId],
-    );
+        : [...prev, tagId];
+      if (submitted)
+        setTagsError(next.length === 0 ? "At least one tag is required" : "");
+      return next;
+    });
   };
 
   const validate = () => {
+    let valid = true;
     if (!name.trim()) {
       setNameError("Exercise name is required");
-      return false;
+      valid = false;
+    } else {
+      setNameError("");
     }
-    setNameError("");
-    return true;
+    if (!description.trim()) {
+      setDescriptionError("Description is required");
+      valid = false;
+    } else {
+      setDescriptionError("");
+    }
+    if (!steps.some((s) => s.trim())) {
+      setStepsError("At least one instruction step is required");
+      valid = false;
+    } else {
+      setStepsError("");
+    }
+    if (tagIds.length === 0) {
+      setTagsError("At least one tag is required");
+      valid = false;
+    } else {
+      setTagsError("");
+    }
+    return valid;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     if (!validate()) {
-      nameInputRef.current?.focus();
+      if (!name.trim()) nameInputRef.current?.focus();
       return;
     }
 
@@ -256,6 +291,10 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
                   );
                 }
               }}
+              onBlur={() => {
+                if (submitted)
+                  setNameError(name.trim() ? "" : "Exercise name is required");
+              }}
               maxLength={200}
               aria-required="true"
               aria-invalid={!!nameError}
@@ -273,19 +312,34 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
               <span className="exercise-form-label-optional">(required)</span>
             </label>
             <textarea
-              className="exercise-form-textarea"
+              className={`exercise-form-textarea${descriptionError ? " has-error" : ""}`}
               placeholder="Describe the mechanical intent and focus of this movement..."
               rows={4}
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
                 setIsDirty(true);
+                if (submitted)
+                  setDescriptionError(
+                    e.target.value.trim() ? "" : "Description is required",
+                  );
                 const el = e.target;
                 el.style.height = "auto";
                 el.style.height = `${el.scrollHeight}px`;
               }}
+              onBlur={() => {
+                if (submitted)
+                  setDescriptionError(
+                    description.trim() ? "" : "Description is required",
+                  );
+              }}
               maxLength={2000}
             />
+            {descriptionError && (
+              <span className="exercise-form-error" role="alert">
+                {descriptionError}
+              </span>
+            )}
           </div>
         </section>
 
@@ -304,6 +358,11 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
               Add Step
             </button>
           </div>
+          {stepsError && (
+            <span className="exercise-form-error" role="alert">
+              {stepsError}
+            </span>
+          )}
           <div className="exercise-form-steps">
             {steps.map((step, i) => (
               <div key={i} className="exercise-form-step">
@@ -334,6 +393,14 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
                       removeStep(i);
                     }
                   }}
+                  onBlur={() => {
+                    if (submitted)
+                      setStepsError(
+                        steps.some((s) => s.trim())
+                          ? ""
+                          : "At least one instruction step is required",
+                      );
+                  }}
                 />
                 {steps.length > 1 && (
                   <button
@@ -350,11 +417,28 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
           </div>
         </section>
 
-        <section className="exercise-form-tags-section">
+        <section
+          className="exercise-form-tags-section"
+          onBlur={(e) => {
+            if (
+              submitted &&
+              !e.currentTarget.contains(e.relatedTarget as Node)
+            ) {
+              setTagsError(
+                tagIds.length === 0 ? "At least one tag is required" : "",
+              );
+            }
+          }}
+        >
           <label className="exercise-form-label">
             Tags{" "}
             <span className="exercise-form-label-optional">(required)</span>
           </label>
+          {tagsError && (
+            <span className="exercise-form-error" role="alert">
+              {tagsError}
+            </span>
+          )}
           <div className="exercise-form-tag-chips">
             {tags && tags.length > 0 ? (
               tags.map((tag) => {
@@ -399,7 +483,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
           <button
             type="submit"
             className="exercise-form-submit-btn"
-            disabled={isPending || !name.trim()}
+            disabled={isPending}
           >
             {isPending ? (
               <>
