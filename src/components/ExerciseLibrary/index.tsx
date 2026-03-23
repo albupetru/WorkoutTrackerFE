@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ExerciseTable from "./ExerciseTable";
 import CategoryDropdown from "./CategoryDropdown";
 import { ExerciseFilters as ExerciseFiltersType } from "../../types/exercise.types.tsx";
@@ -17,6 +18,7 @@ const defaultFilterState: ExerciseFiltersType = {
 
 const ExerciseLibrary = () => {
   const { isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [filters, setFilters] =
     useState<ExerciseFiltersType>(defaultFilterState);
   const [totalCount, setTotalCount] = useState(0);
@@ -72,27 +74,29 @@ const ExerciseLibrary = () => {
           selectedTagIds={filters.tagIds ?? []}
           onApply={handleCategoryApply}
         />
+        {isAdmin && (
+          <label className="unverified-toggle">
+            <input
+              type="checkbox"
+              checked={filters.includeUnverified ?? false}
+              onChange={(e) => handleIncludeUnverifiedChange(e.target.checked)}
+            />
+            Show unverified
+          </label>
+        )}
         <span className="count-display top-bar-count">
           Displaying {displayedCount} of {totalCount} movements
         </span>
+        <button
+          className="library-add-btn"
+          onClick={() => navigate("/exercise/new")}
+        >
+          <span className="material-symbols-outlined">add</span>
+          Add New
+        </button>
       </div>
 
       <div className="library-content">
-        {isAdmin && (
-          <div className="controls-row">
-            <label className="unverified-toggle">
-              <input
-                type="checkbox"
-                checked={filters.includeUnverified ?? false}
-                onChange={(e) =>
-                  handleIncludeUnverifiedChange(e.target.checked)
-                }
-              />
-              Show unverified
-            </label>
-          </div>
-        )}
-
         <ExerciseTable
           filters={filters}
           onPageChange={handlePageChange}

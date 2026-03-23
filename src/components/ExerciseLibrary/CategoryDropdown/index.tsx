@@ -82,8 +82,25 @@ const CategoryDropdown = ({
         type="button"
       >
         {label}
-        <span className="material-symbols-outlined category-chevron">
-          {open ? "expand_less" : "expand_more"}
+        <span className="category-btn-icons">
+          {pendingTagIds.length > 0 && (
+            <span
+              className="material-symbols-outlined category-clear"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (debounceRef.current) clearTimeout(debounceRef.current);
+                setPendingTagIds([]);
+                onApply([]);
+                setOpen(false);
+                setSearch("");
+              }}
+            >
+              close
+            </span>
+          )}
+          <span className="material-symbols-outlined category-chevron">
+            {open ? "expand_less" : "expand_more"}
+          </span>
         </span>
       </button>
 
