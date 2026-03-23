@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Volum - Barbell Back Squat | KINETIC NOIR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700;800;900&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#526900",
+                        "on-primary-container": "#4a5e00",
+                        "primary-fixed": "#cafd00",
+                        "surface-tint": "#f3ffca",
+                        "secondary-fixed": "#26e6ff",
+                        "secondary-container": "#006875",
+                        "outline": "#767575",
+                        "primary-container": "#cafd00",
+                        "on-tertiary-container": "#5d5000",
+                        "on-secondary": "#004d57",
+                        "on-tertiary-fixed-variant": "#685900",
+                        "on-primary": "#516700",
+                        "tertiary-fixed-dim": "#edd13a",
+                        "on-background": "#ffffff",
+                        "primary-dim": "#beee00",
+                        "primary": "#f3ffca",
+                        "surface-variant": "#262626",
+                        "error": "#ff7351",
+                        "secondary": "#00e3fd",
+                        "on-error": "#450900",
+                        "surface-container-low": "#131313",
+                        "error-container": "#b92902",
+                        "on-surface-variant": "#adaaaa",
+                        "error-dim": "#d53d18",
+                        "primary-fixed-dim": "#beee00",
+                        "secondary-fixed-dim": "#00d7f0",
+                        "surface-dim": "#0e0e0e",
+                        "on-secondary-fixed": "#003a42",
+                        "on-tertiary": "#665800",
+                        "inverse-primary": "#516700",
+                        "background": "#0e0e0e",
+                        "tertiary": "#ffeea5",
+                        "surface-container-highest": "#262626",
+                        "on-secondary-fixed-variant": "#005964",
+                        "outline-variant": "#484847",
+                        "tertiary-fixed": "#fce047",
+                        "on-primary-fixed": "#3a4a00",
+                        "on-error-container": "#ffd2c8",
+                        "surface-container-lowest": "#000000",
+                        "surface": "#0e0e0e",
+                        "on-surface": "#ffffff",
+                        "surface-bright": "#2c2c2c",
+                        "tertiary-container": "#fce047",
+                        "inverse-on-surface": "#565555",
+                        "inverse-surface": "#fcf9f8",
+                        "tertiary-dim": "#edd13a",
+                        "secondary-dim": "#00d4ec",
+                        "on-secondary-container": "#e8fbff",
+                        "surface-container-high": "#20201f",
+                        "on-tertiary-fixed": "#483d00",
+                        "surface-container": "#1a1a1a"
+                    },
+                    fontFamily: {
+                        "headline": ["Lexend"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #f3ffca 0%, #cafd00 100%);
+        }
+        .glass-panel {
+            background: rgba(38, 38, 38, 0.6);
+            backdrop-filter: blur(24px);
+        }
+        .inner-glow-top-left {
+            box-shadow: inset 1px 1px 0px 0px rgba(72, 72, 71, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Exact Sidebar from SCREEN_13) -->
+<aside class="fixed left-0 top-0 h-full w-64 border-r border-[#484847]/15 bg-[#0e0e0e] hidden lg:flex flex-col py-8 z-50">
+<div class="px-6 mb-8">
+<div class="text-xl font-black text-[#ccff00] italic tracking-tighter">Volum</div>
+</div>
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img alt="Athlete avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8RKUE2iPyFuagQ-u38VzgtEB51Ol63xNsSHU3dyyyx6ncL_wNkjvMiTOr3S6qBSqNRFm5Hy8SDZqLMgqhDm5c_Iua1FSX5-KwMnhkffrc6ik72ab97jnyFPuBiu1IFFAo56iCMlXL5xgJ6gA9bvzALWVHZ-sm45A5jfmjgx-tZrSWAostj8MLLqC-SpStutVO9-bISn85YA_q2AAqhZr4eJx-_xEQux-7T6URds-CoDloRAdWk3MXtky7Ojf6MCG6v_NzQbd6QcU"/>
+</div>
+<div>
+<div class="font-headline font-bold text-xs tracking-widest uppercase text-on-surface">ATHLETE_01</div>
+<div class="text-[10px] text-on-surface-variant tracking-wider uppercase font-medium">Elite Performance</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 text-[#ccff00] bg-[#1a1a1a] border-l-4 border-[#ccff00] px-6 py-4 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+<span class="font-headline font-bold text-xs tracking-widest uppercase">Library</span>
+</a>
+<a class="flex items-center gap-4 text-[#adaaaa] px-6 py-4 hover:bg-[#131313] transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-headline font-bold text-xs tracking-widest uppercase">Workouts</span>
+</a>
+<a class="flex items-center gap-4 text-[#adaaaa] px-6 py-4 hover:bg-[#131313] transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-headline font-bold text-xs tracking-widest uppercase">Progress</span>
+</a>
+<a class="flex items-center gap-4 text-[#adaaaa] px-6 py-4 hover:bg-[#131313] transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-headline font-bold text-xs tracking-widest uppercase">Profile</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full kinetic-gradient text-on-primary-fixed py-4 rounded-lg font-headline font-bold text-xs tracking-widest uppercase hover:brightness-110 active:scale-95 transition-all duration-200">
+            START WORKOUT
+        </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="lg:ml-64 min-h-screen flex flex-col">
+<!-- Top Bar with Back Link -->
+<header class="h-20 flex items-center px-8 border-b border-[#484847]/15">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 font-headline font-bold text-[10px] uppercase tracking-widest">
+<span class="material-symbols-outlined text-lg" data-icon="arrow_back">arrow_back</span>
+            Back to library
+        </button>
+</header>
+<!-- Centered Exercise Detail Content -->
+<div class="p-8 md:p-12 max-w-4xl mx-auto w-full space-y-12">
+<!-- Centered Header Section -->
+<header class="text-center space-y-6">
+<h1 class="font-headline font-black uppercase leading-none tracking-tighter text-on-surface text-4xl md:text-6xl">
+                Barbell <span class="text-primary-container">Back Squat</span>
+</h1>
+<!-- Centered Tags -->
+<div class="flex flex-wrap justify-center gap-2">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded text-[10px] font-headline font-bold uppercase tracking-wider">Quadriceps</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded text-[10px] font-headline font-bold uppercase tracking-wider">Glutes</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded text-[10px] font-headline font-bold uppercase tracking-wider">Hamstrings</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded text-[10px] font-headline font-bold uppercase tracking-wider">Lower Back</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded text-[10px] font-headline font-bold uppercase tracking-wider">Core</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded text-[10px] font-headline font-bold uppercase tracking-wider">Barbell</span>
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1.5 rounded text-[10px] font-headline font-bold uppercase tracking-wider">Advanced</span>
+</div>
+<!-- Action Icons -->
+</header>
+<!-- Centered Media Section -->
+<!-- Description and Instructions -->
+<div class="space-y-12">
+<!-- Description -->
+<div class="bg-surface-container-low border-l-4 border-primary p-8 rounded-r-xl">
+<p class="font-body text-lg leading-relaxed text-on-surface-variant">
+                    A fundamental compound movement targeting the posterior chain, specifically the quadriceps, hamstrings, and glutes. This exercise is essential for building lower body strength and overall power.
+                </p>
+</div>
+<!-- Step-by-Step Instructions -->
+<section class="space-y-8 bg-surface-container-low p-8 md:p-10 rounded-xl border border-outline-variant/10">
+<h3 class="font-headline font-bold text-xs uppercase tracking-[0.2em] text-primary flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+                    Step-by-Step Instructions
+                </h3>
+<div class="space-y-8">
+<div class="flex gap-6 group">
+<div class="flex-none w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center font-headline font-black text-sm text-primary group-hover:bg-primary group-hover:text-on-primary-fixed transition-colors">1</div>
+<p class="font-body text-base text-on-surface-variant group-hover:text-on-surface transition-colors pt-1.5">Unrack bar: Position the barbell across your traps and step back from the rack. Ensure your feet are shoulder-width apart.</p>
+</div>
+<div class="flex gap-6 group">
+<div class="flex-none w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center font-headline font-black text-sm text-primary group-hover:bg-primary group-hover:text-on-primary-fixed transition-colors">2</div>
+<p class="font-body text-base text-on-surface-variant group-hover:text-on-surface transition-colors pt-1.5">Descend to parallel: Hinge at the hips and bend knees until thighs are parallel to the floor, keeping your back straight.</p>
+</div>
+<div class="flex gap-6 group">
+<div class="flex-none w-10 h-10 rounded-full bg-surface-container-highest border border-outline-variant/30 flex items-center justify-center font-headline font-black text-sm text-primary group-hover:bg-primary group-hover:text-on-primary-fixed transition-colors">3</div>
+<p class="font-body text-base text-on-surface-variant group-hover:text-on-surface transition-colors pt-1.5">Drive up: Explosively push through your heels to return to the starting position while maintaining core tension.</p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-surface/90 backdrop-blur-xl z-50 lg:hidden rounded-t-2xl border-t border-outline-variant/15">
+<a class="flex flex-col items-center justify-center text-primary-container px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+<span class="font-body text-[10px] font-bold uppercase">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-body text-[10px] font-bold uppercase">Workouts</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-body text-[10px] font-bold uppercase">Progress</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-body text-[10px] font-bold uppercase">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,299 @@
+/* ============================================================
+   Exercise Detail Page - Kinetic Noir Design System
+   ============================================================ */
+
+/* ---- Top Bar ---- */
+.exercise-detail-topbar {
+  position: fixed;
+  top: 0;
+  left: 256px;
+  right: 0;
+  height: 80px;
+  background: rgba(14, 14, 14, 0.9);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(72, 72, 71, 0.15);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.exercise-detail-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  padding: 0.25rem 0;
+  font-family: "Lexend", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: color 0.2s;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:hover {
+    color: var(--color-primary);
+    border-color: transparent;
+  }
+}
+
+/* ---- Action Buttons (top-right) ---- */
+.exercise-detail-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.exercise-detail-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: var(--color-surface-container);
+  border: 1px solid rgba(72, 72, 71, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  font-family: "Lexend", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  .material-symbols-outlined {
+    font-size: 16px;
+  }
+
+  &:hover {
+    background: var(--color-surface-container-high);
+    color: var(--color-on-surface);
+    border-color: transparent;
+  }
+
+  &--edit:hover {
+    border-color: rgba(0, 227, 253, 0.3);
+    color: var(--color-secondary);
+  }
+
+  &--verify:hover {
+    border-color: rgba(202, 253, 0, 0.3);
+    color: var(--color-primary-container);
+  }
+
+  &--delete:hover {
+    border-color: rgba(255, 115, 81, 0.3);
+    color: #ff7351;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ---- Main Content ---- */
+.exercise-detail-content {
+  margin-top: 80px;
+  padding: 3rem 2rem 5rem;
+  max-width: 56rem; /* ~896px */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* ---- Header (Title + Tags) ---- */
+.exercise-detail-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.exercise-detail-title {
+  font-family: "Lexend", sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.5rem;
+}
+
+.exercise-detail-title-primary {
+  color: var(--color-on-surface);
+}
+
+.exercise-detail-title-accent {
+  color: var(--color-primary-container);
+}
+
+/* ---- Tags ---- */
+.exercise-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.exercise-detail-tag {
+  background: var(--color-surface-container-highest);
+  color: var(--color-on-surface-variant);
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  font-family: "Lexend", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ---- Sections wrapper ---- */
+.exercise-detail-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* ---- Description Block ---- */
+.exercise-detail-description {
+  background: var(--color-surface-container-low);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 2rem;
+
+  p {
+    font-family: "Manrope", sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--color-on-surface-variant);
+    margin: 0;
+  }
+}
+
+/* ---- Instructions Section ---- */
+.exercise-detail-instructions {
+  background: var(--color-surface-container-low);
+  border: 1px solid rgba(72, 72, 71, 0.1);
+  border-radius: 0.75rem;
+  padding: 2rem 2.5rem;
+}
+
+.exercise-detail-instructions-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: "Lexend", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-primary);
+  margin: 0 0 2rem;
+
+  .material-symbols-outlined {
+    font-size: 26px;
+  }
+}
+
+.exercise-detail-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.exercise-detail-step {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+
+  &:hover .exercise-detail-step-number {
+    background: var(--color-primary-container);
+    color: var(--color-on-primary-fixed);
+    border-color: transparent;
+  }
+
+  &:hover .exercise-detail-step-text {
+    color: var(--color-on-surface);
+  }
+}
+
+.exercise-detail-step-number {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background: var(--color-surface-container-highest);
+  border: 1px solid rgba(72, 72, 71, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Lexend", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.exercise-detail-step-text {
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-on-surface-variant);
+  padding-top: 0.375rem;
+  transition: color 0.2s;
+  margin: 0;
+}
+
+/* ---- Loading / Error / Empty States ---- */
+.exercise-detail-state {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: var(--color-on-surface-variant);
+  font-family: "Manrope", sans-serif;
+
+  .material-symbols-outlined {
+    font-size: 48px;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  button {
+    margin-top: 0.5rem;
+    font-family: "Lexend", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    background: var(--color-surface-container);
+    color: var(--color-on-surface);
+    border: 1px solid rgba(72, 72, 71, 0.2);
+    border-radius: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--color-surface-container-high);
+      border-color: transparent;
+    }
+  }
+}
