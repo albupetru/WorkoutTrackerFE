@@ -1,0 +1,12 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="neonGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b6ff00"></stop>
+      <stop offset="100%" stop-color="#66ff00"></stop>
+    </linearGradient>
+  </defs>
+
+  <g transform="skewX(-12)">
+    <path d="M10 10 L45 110 L75 110 L110 10 L85 10 L60 85 L35 10 Z" fill="url(#neonGreen)"></path>
+  </g>
+</svg>

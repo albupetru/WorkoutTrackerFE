@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useTags } from "../../../hooks/useTags";
 import "./style.scss";
 
@@ -14,14 +14,17 @@ const CategoryDropdown = ({
   const { data: tags } = useTags();
   const [open, setOpen] = useState(false);
   const [pendingTagIds, setPendingTagIds] = useState<string[]>(selectedTagIds);
+  const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync pending state when prop changes externally
   useEffect(() => {
     setPendingTagIds(selectedTagIds);
   }, [selectedTagIds]);
 
-  // Close on click outside and apply
+  // Close on click outside and apply immediately
   useEffect(() => {
     if (!open) return;
     const handleClickOutside = (e: MouseEvent) => {
@@ -29,7 +32,9 @@ const CategoryDropdown = ({
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
         setOpen(false);
+        setSearch("");
         onApply(pendingTagIds);
       }
     };
@@ -37,16 +42,30 @@ const CategoryDropdown = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, pendingTagIds, onApply]);
 
+  const scheduleApply = useCallback(
+    (nextTagIds: string[]) => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        onApply(nextTagIds);
+      }, 300);
+    },
+    [onApply],
+  );
+
   const toggleTag = (tagId: string) => {
-    setPendingTagIds((prev) =>
-      prev.includes(tagId)
+    setPendingTagIds((prev) => {
+      const next = prev.includes(tagId)
         ? prev.filter((id) => id !== tagId)
-        : [...prev, tagId],
-    );
+        : [...prev, tagId];
+      scheduleApply(next);
+      return next;
+    });
   };
 
   const handleClose = () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
     setOpen(false);
+    setSearch("");
     onApply(pendingTagIds);
   };
 
@@ -70,16 +89,51 @@ const CategoryDropdown = ({
 
       {open && tags && tags.length > 0 && (
         <div className="dropdown-panel">
-          {tags.map((tag) => (
-            <label key={tag.id} className="dropdown-option">
-              <input
-                type="checkbox"
-                checked={pendingTagIds.includes(tag.id)}
-                onChange={() => toggleTag(tag.id)}
-              />
-              {tag.name}
-            </label>
-          ))}
+          <div className="dropdown-search">
+            <span className="material-symbols-outlined dropdown-search-icon">
+              search
+            </span>
+            <input
+              ref={searchInputRef}
+              className="dropdown-search-input"
+              type="text"
+              placeholder="Search tags..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              autoFocus
+            />
+            {search && (
+              <button
+                className="dropdown-search-clear"
+                type="button"
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+              >
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            )}
+          </div>
+          <div className="dropdown-options">
+            {tags
+              .filter((tag) =>
+                tag.name.toLowerCase().includes(search.toLowerCase()),
+              )
+              .map((tag) => (
+                <label key={tag.id} className="dropdown-option">
+                  <input
+                    type="checkbox"
+                    checked={pendingTagIds.includes(tag.id)}
+                    onChange={() => toggleTag(tag.id)}
+                  />
+                  {tag.name}
+                </label>
+              ))}
+            {tags.filter((tag) =>
+              tag.name.toLowerCase().includes(search.toLowerCase()),
+            ).length === 0 && (
+              <div className="dropdown-no-results">No tags found</div>
+            )}
+          </div>
         </div>
       )}
     </div>
