@@ -1,16 +1,32 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 import "./style.scss";
 import useAuth from "../authentication/useAuth";
 
 const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { onLogOut, name, role } = useAuth();
+  const { onLogOut, name } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const onLogOutClick = async () => {
+    setMenuOpen(false);
     await onLogOut();
     navigate("/login");
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
 
   const initials = name
     ? name
@@ -24,64 +40,59 @@ const Layout = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div>
-      <aside className="sidebar">
-        <div className="sidebar-logo">Volum</div>
-
-        <div className="sidebar-user">
-          <div className="sidebar-user-avatar">{initials}</div>
-          <div className="sidebar-user-info">
-            <span className="sidebar-user-name">{name || "User"}</span>
-            <span className="sidebar-user-subtitle">{role || "Role"}</span>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
+    <div className="app-shell">
+      <header className="topnav">
+        <span className="topnav-logo">Volum</span>
+        <nav className="topnav-links">
           <Link
             to="/exercise-library"
-            className={`sidebar-nav-item${isActive("/exercise-library") ? " active" : ""}`}
+            className={`topnav-link${isActive("/exercise-library") ? " active" : ""}`}
           >
-            <span className="material-symbols-outlined">fitness_center</span>
             Library
           </Link>
           <Link
             to="/"
-            className={`sidebar-nav-item${isActive("/workouts") ? " active" : ""}`}
+            className={`topnav-link${isActive("/workouts") ? " active" : ""}`}
           >
-            <span className="material-symbols-outlined">calendar_today</span>
             Workouts
           </Link>
           <Link
             to="/"
-            className={`sidebar-nav-item${isActive("/progress") ? " active" : ""}`}
+            className={`topnav-link${isActive("/progress") ? " active" : ""}`}
           >
-            <span className="material-symbols-outlined">trending_up</span>
             Progress
           </Link>
           <Link
             to="/"
-            className={`sidebar-nav-item${isActive("/profile") ? " active" : ""}`}
+            className={`topnav-link${isActive("/profile") ? " active" : ""}`}
           >
-            <span className="material-symbols-outlined">person</span>
             Profile
           </Link>
-          <button
-            className="sidebar-nav-item sidebar-logout-btn"
-            onClick={onLogOutClick}
-          >
-            <span className="material-symbols-outlined">logout</span>
-            Log out
-          </button>
         </nav>
-
-        <div className="sidebar-footer">
-          <button className="sidebar-start-btn">
-            <span className="material-symbols-outlined">play_arrow</span>
-            Start Workout
-          </button>
+        <div className="topnav-actions">
+          <div className="topnav-user-menu" ref={menuRef}>
+            <button
+              className="topnav-user-avatar"
+              onClick={() => setMenuOpen((o) => !o)}
+              title={name || "User"}
+            >
+              {initials}
+            </button>
+            {menuOpen && (
+              <div className="topnav-dropdown">
+                <div className="topnav-dropdown-header">{name}</div>
+                <button
+                  className="topnav-dropdown-item"
+                  onClick={onLogOutClick}
+                >
+                  <span className="material-symbols-outlined">logout</span>
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </aside>
-
+      </header>
       <main className="main-content">
         <Outlet />
       </main>

@@ -40,7 +40,7 @@ const tableConfiguration = ({
         className="th-inner sortable"
         onClick={() => onSortChange("name")}
       >
-        Movement Pattern
+        Exercise
         <SortIcon column="name" sortBy={sortBy} sortOrder={sortOrder} />
       </button>
     ),
@@ -49,7 +49,6 @@ const tableConfiguration = ({
       <NameCell
         exerciseId={row.original.id}
         exerciseName={row.original.name}
-        description={row.original.description}
       />
     ),
   },

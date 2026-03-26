@@ -23,7 +23,6 @@ const ExerciseLibrary = () => {
     useState<ExerciseFiltersType>(defaultFilterState);
   const [totalCount, setTotalCount] = useState(0);
   const [keywordInput, setKeywordInput] = useState("");
-  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const hasFilters = (filters.tagIds?.length ?? 0) > 0;
 
@@ -57,42 +56,44 @@ const ExerciseLibrary = () => {
     setFilters((f) => ({ ...f, includeUnverified: checked, pageNumber: 1 }));
   };
 
-  const displayedCount = Math.min(
-    (filters.pageNumber ?? 1) * (filters.pageSize ?? 20),
-    totalCount,
-  );
-
   return (
-    <div>
-      <div className="library-header">
-        <div className="library-top-bar">
-          <span className="material-symbols-outlined search-icon">search</span>
-          <input
-            className="library-search-input"
-            type="text"
-            placeholder="Search movements..."
-            value={keywordInput}
-            onChange={(e) => setKeywordInput(e.target.value)}
-          />
-          <button
-            type="button"
-            className={`library-filter-btn${
-              filtersOpen
-                ? " library-filter-btn--open"
-                : hasFilters
-                  ? " library-filter-btn--active"
-                  : ""
-            }`}
-            onClick={() => setFiltersOpen((v) => !v)}
-          >
-            <span className="material-symbols-outlined">tune</span>
-            Filters
-            {!filtersOpen && hasFilters && (
-              <span className="library-filter-badge">
-                {filters.tagIds?.length}
-              </span>
+    <>
+      <div className="library-sidebar">
+        <div className="library-sidebar-top">
+          <div className="library-sidebar-search">
+            <span className="material-symbols-outlined search-icon">
+              search
+            </span>
+            <input
+              className="library-search-input"
+              type="text"
+              placeholder="Search movements..."
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+            />
+          </div>
+          <span className="library-results-count">{totalCount} results</span>
+        </div>
+
+        <div className="library-sidebar-filters">
+          <div className="library-sidebar-filters-header">
+            <span className="library-filters-label">Filters</span>
+            {hasFilters && (
+              <button
+                type="button"
+                className="library-filter-clear-all"
+                onClick={() => handleTagChange([])}
+              >
+                <span className="material-symbols-outlined">close</span>
+                Clear all
+              </button>
             )}
-          </button>
+          </div>
+          <FilterBar
+            selectedTagIds={filters.tagIds ?? []}
+            onChange={handleTagChange}
+            variant="sidebar"
+          />
           {isAdmin && (
             <label className="unverified-toggle">
               <input
@@ -105,49 +106,32 @@ const ExerciseLibrary = () => {
               Show unverified
             </label>
           )}
-          <span className="count-display top-bar-count">
-            Displaying {displayedCount} of {totalCount} movements
-          </span>
-          <button
-            className="library-add-btn"
-            onClick={() => navigate("/exercise/new")}
-          >
-            <span className="material-symbols-outlined">add</span>
-            Add New
-          </button>
         </div>
 
-        {filtersOpen && (
-          <div className="library-filter-row">
-            <FilterBar
-              selectedTagIds={filters.tagIds ?? []}
-              onChange={handleTagChange}
-            />
-            {hasFilters && (
-              <button
-                type="button"
-                className="library-filter-clear-all"
-                onClick={() => handleTagChange([])}
-              >
-                <span className="material-symbols-outlined">close</span>
-                Clear all
-              </button>
-            )}
+        {isAdmin && (
+          <div className="library-sidebar-bottom">
+            <button
+              className="library-add-btn"
+              onClick={() => navigate("/exercise/new")}
+            >
+              <span className="material-symbols-outlined">add</span>
+              Add New
+            </button>
           </div>
         )}
       </div>
 
-      <div
-        className={`library-content${filtersOpen ? " library-content--filters-open" : ""}`}
-      >
-        <ExerciseTable
-          filters={filters}
-          onPageChange={handlePageChange}
-          onTotalCountChange={setTotalCount}
-          onSortChange={handleSortChange}
-        />
+      <div className="library-main">
+        <div className="library-content">
+          <ExerciseTable
+            filters={filters}
+            onPageChange={handlePageChange}
+            onTotalCountChange={setTotalCount}
+            onSortChange={handleSortChange}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

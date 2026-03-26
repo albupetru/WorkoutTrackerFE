@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTagGroups } from "../../hooks/useTags";
 import { Tag, TagGroup } from "../../types/tag.types";
 import FilterDropdown from "./FilterDropdown";
@@ -227,13 +227,69 @@ const MusclePanel = ({
   );
 };
 
+// ---- Sidebar accordion section ----
+const FilterSection = ({
+  label,
+  selectedCount,
+  onClear,
+  children,
+}: {
+  label: string;
+  selectedCount: number;
+  onClear: () => void;
+  children: React.ReactNode;
+}) => {
+  const [expanded, setExpanded] = useState(selectedCount > 0);
+
+  return (
+    <div className="fsec">
+      <button
+        type="button"
+        className={`fsec-header${selectedCount > 0 ? " fsec-header--active" : ""}`}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => setExpanded((v) => !v)}
+      >
+        <span className="fsec-label">{label}</span>
+        {selectedCount > 0 && (
+          <span className="fsec-badge">{selectedCount}</span>
+        )}
+        <span className="material-symbols-outlined fsec-chevron">
+          {expanded ? "expand_less" : "expand_more"}
+        </span>
+      </button>
+      {expanded && (
+        <div className="fsec-body">
+          {selectedCount > 0 && (
+            <button
+              type="button"
+              className="fsec-clear-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClear();
+              }}
+            >
+              Clear
+            </button>
+          )}
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ---- Main FilterBar ----
 interface FilterBarProps {
   selectedTagIds: string[];
   onChange: (ids: string[]) => void;
+  variant?: "horizontal" | "sidebar";
 }
 
-const FilterBar = ({ selectedTagIds, onChange }: FilterBarProps) => {
+const FilterBar = ({
+  selectedTagIds,
+  onChange,
+  variant = "horizontal",
+}: FilterBarProps) => {
   const { data: tagGroups, isLoading } = useTagGroups();
 
   if (isLoading || !tagGroups) return null;
@@ -260,7 +316,28 @@ const FilterBar = ({ selectedTagIds, onChange }: FilterBarProps) => {
 
         const label = SECTION_LABELS[group.tagType] ?? group.tagType;
 
-        return (
+        return variant === "sidebar" ? (
+          <FilterSection
+            key={group.tagType}
+            label={label}
+            selectedCount={sectionSelected.length}
+            onClear={() => handleSectionChange([])}
+          >
+            {group.tagType === "BodyZone" ? (
+              <MusclePanel
+                bodyZoneGroup={group}
+                selectedTagIds={sectionSelected}
+                onChange={handleSectionChange}
+              />
+            ) : (
+              <FlatPanel
+                tags={group.tags}
+                selectedTagIds={sectionSelected}
+                onChange={handleSectionChange}
+              />
+            )}
+          </FilterSection>
+        ) : (
           <FilterDropdown
             key={group.tagType}
             label={label}

@@ -198,6 +198,7 @@ const FilterSection = ({
         type="button"
         className="tf-section-header"
         aria-expanded={open}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={() => setOpen((v) => !v)}
       >
         <span className="tf-section-label">{label}</span>
