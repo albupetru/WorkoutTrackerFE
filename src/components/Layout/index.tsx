@@ -1,7 +1,7 @@
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
-import "./style.scss";
-import useAuth from "../authentication/useAuth";
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import './style.scss';
+import useAuth from '../authentication/useAuth';
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Layout = () => {
   const onLogOutClick = async () => {
     setMenuOpen(false);
     await onLogOut();
-    navigate("/login");
+    navigate('/login');
   };
 
   useEffect(() => {
@@ -23,19 +23,19 @@ const Layout = () => {
       }
     };
     if (menuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
 
   const initials = name
     ? name
-        .split(" ")
+        .split(' ')
         .map((n) => n[0])
-        .join("")
+        .join('')
         .toUpperCase()
         .slice(0, 2)
-    : "??";
+    : '??';
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -46,25 +46,25 @@ const Layout = () => {
         <nav className="topnav-links">
           <Link
             to="/exercise-library"
-            className={`topnav-link${isActive("/exercise-library") ? " active" : ""}`}
+            className={`topnav-link${isActive('/exercise-library') ? ' active' : ''}`}
           >
             Library
           </Link>
           <Link
             to="/"
-            className={`topnav-link${isActive("/workouts") ? " active" : ""}`}
+            className={`topnav-link${isActive('/workouts') ? ' active' : ''}`}
           >
             Workouts
           </Link>
           <Link
             to="/"
-            className={`topnav-link${isActive("/progress") ? " active" : ""}`}
+            className={`topnav-link${isActive('/progress') ? ' active' : ''}`}
           >
             Progress
           </Link>
           <Link
             to="/"
-            className={`topnav-link${isActive("/profile") ? " active" : ""}`}
+            className={`topnav-link${isActive('/profile') ? ' active' : ''}`}
           >
             Profile
           </Link>
@@ -74,7 +74,7 @@ const Layout = () => {
             <button
               className="topnav-user-avatar"
               onClick={() => setMenuOpen((o) => !o)}
-              title={name || "User"}
+              title={name || 'User'}
             >
               {initials}
             </button>

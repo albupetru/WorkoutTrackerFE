@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ExerciseTable from "./ExerciseTable";
-import FilterBar from "../FilterBar";
-import { ExerciseFilters as ExerciseFiltersType } from "../../types/exercise.types.tsx";
-import useAuth from "../authentication/useAuth";
-import "./style.scss";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ExerciseTable from './ExerciseTable';
+import FilterBar from '../FilterBar';
+import { ExerciseFilters as ExerciseFiltersType } from '../../types/exercise.types.tsx';
+import useAuth from '../authentication/useAuth';
+import './style.scss';
 
 const defaultFilterState: ExerciseFiltersType = {
-  keyword: "",
+  keyword: '',
   tagIds: [],
   includeUnverified: false,
   pageNumber: 1,
   pageSize: 20,
-  sortBy: "name",
-  sortOrder: "asc",
+  sortBy: 'name',
+  sortOrder: 'asc',
 };
 
 const ExerciseLibrary = () => {
@@ -22,7 +22,7 @@ const ExerciseLibrary = () => {
   const [filters, setFilters] =
     useState<ExerciseFiltersType>(defaultFilterState);
   const [totalCount, setTotalCount] = useState(0);
-  const [keywordInput, setKeywordInput] = useState("");
+  const [keywordInput, setKeywordInput] = useState('');
 
   const hasFilters = (filters.tagIds?.length ?? 0) > 0;
 
@@ -43,7 +43,7 @@ const ExerciseLibrary = () => {
     setFilters((f) => ({
       ...f,
       sortBy: column,
-      sortOrder: f.sortBy === column && f.sortOrder === "asc" ? "desc" : "asc",
+      sortOrder: f.sortBy === column && f.sortOrder === 'asc' ? 'desc' : 'asc',
       pageNumber: 1,
     }));
   };
@@ -112,7 +112,7 @@ const ExerciseLibrary = () => {
           <div className="library-sidebar-bottom">
             <button
               className="library-add-btn"
-              onClick={() => navigate("/exercise/new")}
+              onClick={() => navigate('/exercise/new')}
             >
               <span className="material-symbols-outlined">add</span>
               Add New

@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
-import { Exercise } from "../../../types/exercise.types";
-import { useDeleteExercise, useVerifyExercise } from "../../../api/exercises";
-import useAuth from "../../authentication/useAuth";
-import Button from "../../Button";
-import "./style.scss";
+import { useNavigate } from 'react-router-dom';
+import { Exercise } from '../../../types/exercise.types';
+import { useDeleteExercise, useVerifyExercise } from '../../../api/exercises';
+import useAuth from '../../authentication/useAuth';
+import Button from '../../Button';
+import './style.scss';
 
 interface ActionButtonsProps {
   exercise: Exercise;
@@ -15,7 +15,9 @@ const ActionButtons = ({ exercise }: ActionButtonsProps) => {
   const deleteMutation = useDeleteExercise();
   const verifyMutation = useVerifyExercise();
 
-  if (!userLoaded) return null;
+  if (!userLoaded) {
+    return null;
+  }
 
   const isVerified = !!exercise.verifiedOn;
   const canEdit = isAdmin || !isVerified;
@@ -25,12 +27,8 @@ const ActionButtons = ({ exercise }: ActionButtonsProps) => {
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${exercise.name}"?`)) {
       deleteMutation.mutate(exercise.id, {
-        onSuccess: () => {
-          console.log("Exercise deleted successfully");
-        },
-        onError: (error) => {
-          console.error("Failed to delete exercise:", error);
-          alert("Failed to delete exercise. Please try again.");
+        onError: () => {
+          alert('Failed to delete exercise. Please try again.');
         },
       });
     }
@@ -38,12 +36,8 @@ const ActionButtons = ({ exercise }: ActionButtonsProps) => {
 
   const handleVerify = () => {
     verifyMutation.mutate(exercise.id, {
-      onSuccess: () => {
-        console.log("Exercise verified successfully");
-      },
-      onError: (error) => {
-        console.error("Failed to verify exercise:", error);
-        alert("Failed to verify exercise. Please try again.");
+      onError: () => {
+        alert('Failed to verify exercise. Please try again.');
       },
     });
   };

@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   useExercise,
   useDeleteExercise,
   useVerifyExercise,
-} from "../../api/exercises";
-import useAuth from "../authentication/useAuth";
-import "./style.scss";
+} from '../../api/exercises';
+import useAuth from '../authentication/useAuth';
+import './style.scss';
 
 const ExerciseDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,14 +21,13 @@ const ExerciseDetail = () => {
   const deleteMutation = useDeleteExercise();
   const verifyMutation = useVerifyExercise();
 
-  // ---- Loading state ----
   if (isLoading) {
     return (
       <>
         <header className="exercise-detail-topbar">
           <button
             className="exercise-detail-back-btn"
-            onClick={() => navigate("/exercise-library")}
+            onClick={() => navigate('/exercise-library')}
           >
             <span className="material-symbols-outlined">arrow_back</span>
             Back to library
@@ -42,16 +41,15 @@ const ExerciseDetail = () => {
     );
   }
 
-  // ---- Error state ----
   if (isError || !exercise) {
     const message =
-      error instanceof Error ? error.message : "Failed to load exercise";
+      error instanceof Error ? error.message : 'Failed to load exercise';
     return (
       <>
         <header className="exercise-detail-topbar">
           <button
             className="exercise-detail-back-btn"
-            onClick={() => navigate("/exercise-library")}
+            onClick={() => navigate('/exercise-library')}
           >
             <span className="material-symbols-outlined">arrow_back</span>
             Back to library
@@ -66,21 +64,18 @@ const ExerciseDetail = () => {
     );
   }
 
-  // ---- Derived permissions ----
   const isVerified = !!exercise.verifiedOn;
   const canEdit = userLoaded && (isAdmin || !isVerified);
   const canDelete = canEdit;
   const canVerify = userLoaded && isAdmin && !isVerified;
 
-  // ---- Title split: first word white, rest lime ----
-  const words = exercise.name.toUpperCase().split(" ");
-  const titleFirst = words[0];
-  const titleRest = words.slice(1).join(" ");
+  const words = exercise.name.toUpperCase().split(' ');
+  const titleFirstWord = words[0];
+  const titleRest = words.slice(1).join(' ');
 
-  // ---- Instructions parsed into steps ----
   const instructionSteps = exercise.instructions
     ? exercise.instructions
-        .split("\n")
+        .split('\n')
         .map((s) => s.trim())
         .filter(Boolean)
     : [];
@@ -88,15 +83,15 @@ const ExerciseDetail = () => {
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${exercise.name}"?`)) {
       deleteMutation.mutate(exercise.id, {
-        onSuccess: () => navigate("/exercise-library"),
-        onError: () => alert("Failed to delete exercise. Please try again."),
+        onSuccess: () => navigate('/exercise-library'),
+        onError: () => alert('Failed to delete exercise. Please try again.'),
       });
     }
   };
 
   const handleVerify = () => {
     verifyMutation.mutate(exercise.id, {
-      onError: () => alert("Failed to verify exercise. Please try again."),
+      onError: () => alert('Failed to verify exercise. Please try again.'),
     });
   };
 
@@ -106,7 +101,7 @@ const ExerciseDetail = () => {
       <header className="exercise-detail-topbar">
         <button
           className="exercise-detail-back-btn"
-          onClick={() => navigate("/exercise-library")}
+          onClick={() => navigate('/exercise-library')}
         >
           <span className="material-symbols-outlined">arrow_back</span>
           Back to library
@@ -130,7 +125,7 @@ const ExerciseDetail = () => {
                 disabled={verifyMutation.isPending}
               >
                 <span className="material-symbols-outlined">verified</span>
-                {verifyMutation.isPending ? "Verifying..." : "Verify"}
+                {verifyMutation.isPending ? 'Verifying...' : 'Verify'}
               </button>
             )}
             {canDelete && (
@@ -152,7 +147,9 @@ const ExerciseDetail = () => {
         {/* Title + Tags */}
         <header className="exercise-detail-header">
           <h1 className="exercise-detail-title">
-            <span className="exercise-detail-title-primary">{titleFirst}</span>
+            <span className="exercise-detail-title-primary">
+              {titleFirstWord}
+            </span>
             {titleRest && (
               <span className="exercise-detail-title-accent"> {titleRest}</span>
             )}

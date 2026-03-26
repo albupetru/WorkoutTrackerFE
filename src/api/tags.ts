@@ -1,5 +1,5 @@
-import { apiClient } from "./apiClient";
-import { Tag, TagGroup } from "../types/tag.types";
+import { apiClient } from './apiClient';
+import { Tag, TagGroup } from '../types/tag.types';
 
 export type { Tag, TagGroup };
 export type TagType = string;
@@ -11,9 +11,9 @@ export const getTags = async (type?: string): Promise<Tag[]> => {
     params.type = type;
   }
 
-  return apiClient.get<Tag[]>("/tags", { params });
+  return apiClient.get<Tag[]>('/tags', { params });
 };
 
 export const getTagGroups = async (): Promise<TagGroup[]> => {
-  return apiClient.get<TagGroup[]>("/tags/grouped");
+  return apiClient.get<TagGroup[]>('/tags/grouped');
 };

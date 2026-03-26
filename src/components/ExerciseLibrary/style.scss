@@ -1,5 +1,10 @@
 /* ============ Library Sidebar ============ */
 
+.main-content:has(.library-sidebar) {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .library-sidebar {
   position: fixed;
   top: 56px;
@@ -91,12 +96,20 @@
 /* ============ Library Main ============ */
 
 .library-main {
-  margin-left: 256px;
+  position: fixed;
+  top: 56px;
+  left: 256px;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 .library-content {
-  padding: 1.5rem 2rem;
-  max-width: 1600px;
+  padding: 1.25rem 2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 /* ============ Shared controls ============ */

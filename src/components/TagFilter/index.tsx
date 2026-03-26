@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useTagGroups } from "../../hooks/useTags";
-import { Tag, TagGroup } from "../../types/tag.types";
-import "./style.scss";
+import { useState } from 'react';
+import { useTagGroups } from '../../hooks/useTags';
+import { Tag, TagGroup } from '../../types/tag.types';
+import './style.scss';
 
 interface TagFilterProps {
   selectedTagIds: string[];
@@ -9,29 +9,29 @@ interface TagFilterProps {
 }
 
 const SECTION_LABELS: Record<string, string> = {
-  BodyZone: "Muscles",
-  Equipment: "Equipment",
-  MuscleActivationPattern: "Activation Pattern",
-  Laterality: "Laterality",
-  MovementPattern: "Movement Pattern",
-  ExerciseType: "Exercise Type",
-  Discipline: "Discipline",
-  TrainingSplit: "Training Split",
-  Comfort: "Comfort",
-  Miscellaneous: "Other",
+  BodyZone: 'Muscles',
+  Equipment: 'Equipment',
+  MuscleActivationPattern: 'Activation Pattern',
+  Laterality: 'Laterality',
+  MovementPattern: 'Movement Pattern',
+  ExerciseType: 'Exercise Type',
+  Discipline: 'Discipline',
+  TrainingSplit: 'Training Split',
+  Comfort: 'Comfort',
+  Miscellaneous: 'Other',
 };
 
 const SECTION_ORDER = [
-  "BodyZone",
-  "Equipment",
-  "MuscleActivationPattern",
-  "Laterality",
-  "MovementPattern",
-  "ExerciseType",
-  "Discipline",
-  "TrainingSplit",
-  "Comfort",
-  "Miscellaneous",
+  'BodyZone',
+  'Equipment',
+  'MuscleActivationPattern',
+  'Laterality',
+  'MovementPattern',
+  'ExerciseType',
+  'Discipline',
+  'TrainingSplit',
+  'Comfort',
+  'Miscellaneous',
 ];
 
 interface TagFilterProps {
@@ -93,10 +93,10 @@ const BodyZoneSection = ({
 }) => {
   // muscleFamilyGroup is nested inside bodyZoneGroup.tagGroups
   const muscleFamilyGroup = bodyZoneGroup.tagGroups?.find(
-    (g) => g.tagType === "MuscleFamily",
+    (g) => g.tagType === 'MuscleFamily',
   );
   const muscleGroupGroup = muscleFamilyGroup?.tagGroups?.find(
-    (g) => g.tagType === "MuscleGroup",
+    (g) => g.tagType === 'MuscleGroup',
   );
 
   const [openFamilies, setOpenFamilies] = useState<Record<string, boolean>>(
@@ -116,7 +116,9 @@ const BodyZoneSection = ({
     for (const mgTag of muscleGroupGroup.tags) {
       const pid = mgTag.parentId;
       if (pid) {
-        if (!familyToGroups.has(pid)) familyToGroups.set(pid, []);
+        if (!familyToGroups.has(pid)) {
+          familyToGroups.set(pid, []);
+        }
         familyToGroups.get(pid)!.push(mgTag);
       }
     }
@@ -128,7 +130,9 @@ const BodyZoneSection = ({
     for (const mfTag of muscleFamilyGroup.tags) {
       const pid = mfTag.parentId;
       if (pid) {
-        if (!zoneToFamilies.has(pid)) zoneToFamilies.set(pid, []);
+        if (!zoneToFamilies.has(pid)) {
+          zoneToFamilies.set(pid, []);
+        }
         zoneToFamilies.get(pid)!.push(mfTag);
       }
     }
@@ -154,7 +158,7 @@ const BodyZoneSection = ({
                   >
                     <span className="tf-family-name">{family.name}</span>
                     <span className="material-symbols-outlined tf-family-chevron">
-                      {isOpen ? "expand_less" : "expand_more"}
+                      {isOpen ? 'expand_less' : 'expand_more'}
                     </span>
                   </button>
                   {isOpen && (
@@ -203,7 +207,7 @@ const FilterSection = ({
       >
         <span className="tf-section-label">{label}</span>
         <span className="material-symbols-outlined tf-section-chevron">
-          {open ? "expand_less" : "expand_more"}
+          {open ? 'expand_less' : 'expand_more'}
         </span>
       </button>
       {open && <div className="tf-section-body">{children}</div>}
@@ -241,7 +245,7 @@ const TagFilter = ({ selectedTagIds, onChange }: TagFilterProps) => {
           tagType={group.tagType}
           defaultOpen={true}
         >
-          {group.tagType === "BodyZone" ? (
+          {group.tagType === 'BodyZone' ? (
             <BodyZoneSection
               bodyZoneGroup={group}
               selectedTagIds={selectedTagIds}

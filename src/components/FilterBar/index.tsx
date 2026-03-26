@@ -1,40 +1,40 @@
-import { useEffect, useRef, useState } from "react";
-import { useTagGroups } from "../../hooks/useTags";
-import { Tag, TagGroup } from "../../types/tag.types";
-import FilterDropdown from "./FilterDropdown";
-import "./style.scss";
+import { useEffect, useRef, useState } from 'react';
+import { useTagGroups } from '../../hooks/useTags';
+import { Tag, TagGroup } from '../../types/tag.types';
+import FilterDropdown from './FilterDropdown';
+import './style.scss';
 
 const SECTION_LABELS: Record<string, string> = {
-  BodyZone: "Muscles",
-  Equipment: "Equipment",
-  MuscleActivationPattern: "Activation Pattern",
-  Laterality: "Laterality",
-  MovementPattern: "Movement Pattern",
-  ExerciseType: "Exercise Type",
-  Discipline: "Discipline",
-  TrainingSplit: "Training Split",
-  Comfort: "Comfort",
-  Miscellaneous: "Other",
+  BodyZone: 'Muscles',
+  Equipment: 'Equipment',
+  MuscleActivationPattern: 'Activation Pattern',
+  Laterality: 'Laterality',
+  MovementPattern: 'Movement Pattern',
+  ExerciseType: 'Exercise Type',
+  Discipline: 'Discipline',
+  TrainingSplit: 'Training Split',
+  Comfort: 'Comfort',
+  Miscellaneous: 'Other',
 };
 
 const SECTION_ORDER = [
-  "BodyZone",
-  "Equipment",
-  "MuscleActivationPattern",
-  "Laterality",
-  "MovementPattern",
-  "ExerciseType",
-  "Discipline",
-  "TrainingSplit",
-  "Comfort",
-  "Miscellaneous",
+  'BodyZone',
+  'Equipment',
+  'MuscleActivationPattern',
+  'Laterality',
+  'MovementPattern',
+  'ExerciseType',
+  'Discipline',
+  'TrainingSplit',
+  'Comfort',
+  'Miscellaneous',
 ];
 
 // Returns the selectable (leaf) tag IDs for a top-level group
 function getLeafIds(group: TagGroup): string[] {
-  if (group.tagType === "BodyZone") {
-    const mfg = group.tagGroups?.find((g) => g.tagType === "MuscleFamily");
-    const mgg = mfg?.tagGroups?.find((g) => g.tagType === "MuscleGroup");
+  if (group.tagType === 'BodyZone') {
+    const mfg = group.tagGroups?.find((g) => g.tagType === 'MuscleFamily');
+    const mgg = mfg?.tagGroups?.find((g) => g.tagType === 'MuscleGroup');
     return (mgg?.tags ?? []).map((t) => t.id);
   }
   return group.tags.map((t) => t.id);
@@ -56,7 +56,9 @@ const CheckboxOption = ({
 }) => {
   const ref = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    if (ref.current) ref.current.indeterminate = indeterminate;
+    if (ref.current) {
+      ref.current.indeterminate = indeterminate;
+    }
   }, [indeterminate]);
 
   return (
@@ -111,10 +113,10 @@ const MusclePanel = ({
   onChange: (ids: string[]) => void;
 }) => {
   const muscleFamilyGroup = bodyZoneGroup.tagGroups?.find(
-    (g) => g.tagType === "MuscleFamily",
+    (g) => g.tagType === 'MuscleFamily',
   );
   const muscleGroupGroup = muscleFamilyGroup?.tagGroups?.find(
-    (g) => g.tagType === "MuscleGroup",
+    (g) => g.tagType === 'MuscleGroup',
   );
 
   const selectedSet = new Set(selectedTagIds);
@@ -123,7 +125,9 @@ const MusclePanel = ({
   const zoneToFamilies = new Map<string, Tag[]>();
   for (const mf of muscleFamilyGroup?.tags ?? []) {
     if (mf.parentId) {
-      if (!zoneToFamilies.has(mf.parentId)) zoneToFamilies.set(mf.parentId, []);
+      if (!zoneToFamilies.has(mf.parentId)) {
+        zoneToFamilies.set(mf.parentId, []);
+      }
       zoneToFamilies.get(mf.parentId)!.push(mf);
     }
   }
@@ -131,7 +135,9 @@ const MusclePanel = ({
   const familyToLeaves = new Map<string, Tag[]>();
   for (const mg of muscleGroupGroup?.tags ?? []) {
     if (mg.parentId) {
-      if (!familyToLeaves.has(mg.parentId)) familyToLeaves.set(mg.parentId, []);
+      if (!familyToLeaves.has(mg.parentId)) {
+        familyToLeaves.set(mg.parentId, []);
+      }
       familyToLeaves.get(mg.parentId)!.push(mg);
     }
   }
@@ -144,18 +150,22 @@ const MusclePanel = ({
   const getFamilyLeafIds = (familyId: string) =>
     (familyToLeaves.get(familyId) ?? []).map((l) => l.id);
 
-  type CheckState = "checked" | "indeterminate" | "unchecked";
+  type CheckState = 'checked' | 'indeterminate' | 'unchecked';
 
   const getState = (leafIds: string[]): CheckState => {
     const n = leafIds.filter((id) => selectedSet.has(id)).length;
-    if (n === 0) return "unchecked";
-    if (n === leafIds.length) return "checked";
-    return "indeterminate";
+    if (n === 0) {
+      return 'unchecked';
+    }
+    if (n === leafIds.length) {
+      return 'checked';
+    }
+    return 'indeterminate';
   };
 
   const toggleZone = (zoneId: string) => {
     const leafIds = getZoneLeafIds(zoneId);
-    if (getState(leafIds) === "checked") {
+    if (getState(leafIds) === 'checked') {
       onChange(selectedTagIds.filter((id) => !leafIds.includes(id)));
     } else {
       const toAdd = leafIds.filter((id) => !selectedSet.has(id));
@@ -165,7 +175,7 @@ const MusclePanel = ({
 
   const toggleFamily = (familyId: string) => {
     const leafIds = getFamilyLeafIds(familyId);
-    if (getState(leafIds) === "checked") {
+    if (getState(leafIds) === 'checked') {
       onChange(selectedTagIds.filter((id) => !leafIds.includes(id)));
     } else {
       const toAdd = leafIds.filter((id) => !selectedSet.has(id));
@@ -191,8 +201,8 @@ const MusclePanel = ({
           <div key={zone.id} className="fb-zone">
             <CheckboxOption
               label={zone.name}
-              checked={zoneState === "checked"}
-              indeterminate={zoneState === "indeterminate"}
+              checked={zoneState === 'checked'}
+              indeterminate={zoneState === 'indeterminate'}
               depth={0}
               onChange={() => toggleZone(zone.id)}
             />
@@ -203,8 +213,8 @@ const MusclePanel = ({
                 <div key={family.id}>
                   <CheckboxOption
                     label={family.name}
-                    checked={familyState === "checked"}
-                    indeterminate={familyState === "indeterminate"}
+                    checked={familyState === 'checked'}
+                    indeterminate={familyState === 'indeterminate'}
                     depth={1}
                     onChange={() => toggleFamily(family.id)}
                   />
@@ -245,7 +255,7 @@ const FilterSection = ({
     <div className="fsec">
       <button
         type="button"
-        className={`fsec-header${selectedCount > 0 ? " fsec-header--active" : ""}`}
+        className={`fsec-header${selectedCount > 0 ? ' fsec-header--active' : ''}`}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => setExpanded((v) => !v)}
       >
@@ -254,7 +264,7 @@ const FilterSection = ({
           <span className="fsec-badge">{selectedCount}</span>
         )}
         <span className="material-symbols-outlined fsec-chevron">
-          {expanded ? "expand_less" : "expand_more"}
+          {expanded ? 'expand_less' : 'expand_more'}
         </span>
       </button>
       {expanded && (
@@ -282,17 +292,19 @@ const FilterSection = ({
 interface FilterBarProps {
   selectedTagIds: string[];
   onChange: (ids: string[]) => void;
-  variant?: "horizontal" | "sidebar";
+  variant?: 'horizontal' | 'sidebar';
 }
 
 const FilterBar = ({
   selectedTagIds,
   onChange,
-  variant = "horizontal",
+  variant = 'horizontal',
 }: FilterBarProps) => {
   const { data: tagGroups, isLoading } = useTagGroups();
 
-  if (isLoading || !tagGroups) return null;
+  if (isLoading || !tagGroups) {
+    return null;
+  }
 
   const sorted = [...tagGroups].sort((a, b) => {
     const ai = SECTION_ORDER.indexOf(a.tagType);
@@ -316,14 +328,14 @@ const FilterBar = ({
 
         const label = SECTION_LABELS[group.tagType] ?? group.tagType;
 
-        return variant === "sidebar" ? (
+        return variant === 'sidebar' ? (
           <FilterSection
             key={group.tagType}
             label={label}
             selectedCount={sectionSelected.length}
             onClear={() => handleSectionChange([])}
           >
-            {group.tagType === "BodyZone" ? (
+            {group.tagType === 'BodyZone' ? (
               <MusclePanel
                 bodyZoneGroup={group}
                 selectedTagIds={sectionSelected}
@@ -344,7 +356,7 @@ const FilterBar = ({
             selectedCount={sectionSelected.length}
             onClear={() => handleSectionChange([])}
           >
-            {group.tagType === "BodyZone" ? (
+            {group.tagType === 'BodyZone' ? (
               <MusclePanel
                 bodyZoneGroup={group}
                 selectedTagIds={sectionSelected}

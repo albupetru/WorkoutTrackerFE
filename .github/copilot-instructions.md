@@ -84,6 +84,160 @@ type MyComponentProps = {
 - **Global styles** in `src/index.css` — CSS custom properties on `:root`, resets, base typography
 - **Layout**: CSS Flexbox
 
+### Design System: Kinetic Noir
+
+The app uses a custom dark design system called **Kinetic Noir** — near-black backgrounds, white text, with lime/yellow-green and cyan as the two accent colors. When building new components, follow the established patterns below.
+
+#### Color Palette (CSS variables — defined in `src/index.css`)
+
+| Variable | Value | Usage |
+|---|---|---|
+| `--color-background` | `#0e0e0e` | Page background |
+| `--color-surface` | `#0e0e0e` | Card / surface base |
+| `--color-surface-container-low` | `#131313` | Hover backgrounds, subtle fills |
+| `--color-surface-container` | `#1a1a1a` | Raised containers, dropdowns |
+| `--color-surface-container-high` | `#20201f` | Table header rows |
+| `--color-surface-container-highest` | `#262626` | Highest elevation surface |
+| `--color-surface-bright` | `#2c2c2c` | Open/active control background |
+| `--color-primary` | `#f3ffca` | Hover highlights, active sort icon, accent bar |
+| `--color-primary-dim` | `#beee00` | Logo, active nav link, hyperlinks |
+| `--color-primary-container` | `#cafd00` | Form title accent word, gradient end |
+| `--color-on-primary-fixed` | `#3a4a00` | Text on primary CTA button |
+| `--color-secondary` | `#00e3fd` | Cyan — section labels, input focus border, filter clear links |
+| `--color-on-surface` | `#ffffff` | Primary text |
+| `--color-on-surface-variant` | `#adaaaa` | Secondary/muted text, inactive nav, placeholder |
+| `--color-outline-variant` | `#484847` | Border color base |
+
+#### Additional Raw Colors (used directly, not as variables)
+
+| Color | Usage |
+|---|---|
+| `#ff7351` | Error/destructive — inline validation errors, delete button hover |
+| `#006875` | Filter count badge background (teal-dark) |
+| `#e8fbff` | Filter count badge text (light cyan) |
+| `#4dd9ec` | Active filter button text |
+| `rgba(0, 104, 117, 0.18)` | Active filter button background |
+| `rgba(72, 72, 71, 0.08–0.20)` | Dividers and subtle borders (use `--color-outline-variant` at low opacity) |
+
+#### Typography
+
+Two font families — always reference by name, not generic fallback alone.
+
+**Lexend** — display, headings, navigation, uppercase labels, table headers, logo, primary CTA
+- Weights in use: 400, 500, 700, 800, 900
+- Imported via `@fontsource/lexend`
+
+**Manrope** — body text, descriptions, helper text, checkboxes, secondary UI
+- Weights in use: 400, 500, 600, 700
+- Imported via `@fontsource/manrope`
+- Default app font (`font-family` on `:root` and `body`)
+
+**Typography scale patterns:**
+
+| Role | Font | Size | Weight | Style |
+|---|---|---|---|---|
+| Page title (form header) | Lexend | `3rem` | 900 | Uppercase, `letter-spacing: -0.03em` |
+| Large name input | Lexend | `2rem` | 800 | `letter-spacing: -0.02em` |
+| Logo | Lexend | `1.5rem` | 800 | Italic, `letter-spacing: -0.02em`, color `--color-primary-dim` |
+| Nav links | Lexend | `0.875rem` | 500 | Normal case |
+| Table headers | Lexend | `1rem` | 700 | Uppercase, `letter-spacing: 0.12em` |
+| Exercise name (table row) | Lexend | `1rem` | 700 | Uppercase, `letter-spacing: 0.03em` |
+| Section / field labels | Manrope | `12px` | 700 | Uppercase, `letter-spacing: 0.2em`, color `--color-secondary` |
+| Category / badge labels | Lexend | `9–10px` | 700–800 | Uppercase, `letter-spacing: 0.10–0.14em` |
+| Results count / metadata | Lexend | `11px` | 700 | Uppercase, `letter-spacing: 0.12em`, color `--color-on-surface-variant` |
+| Tag chips (library table) | Lexend | `9px` | 700 | Uppercase, `letter-spacing: 0.1em` |
+| Body / descriptions | Manrope | `0.875–1rem` | 400–600 | Normal |
+| Subtitle under exercise name | Manrope | `10px` | 600 | Uppercase, `letter-spacing: 0.08em`, color `--color-secondary` |
+| Dropdown / menu items | Lexend | `0.8rem` | 500–600 | Normal |
+
+#### Icons
+
+Use **Material Symbols Outlined** — imported globally via `material-symbols/outlined.css`. Reference icons with the `material-symbols-outlined` class. Common sizes: `14px`, `16px`, `18px`, `22px`, `40px`.
+
+#### Spacing & Layout
+
+- Top nav bar: fixed `56px` height; content area gets `margin-top: 56px`
+- Sidebar: fixed `256px` width; content area gets `margin-left: 256px`
+- Library content padding: `1.5rem 2rem`, max-width `1600px`
+- Exercise form: max-width `56rem`, centered, padding `3rem 2rem`
+- Form section gaps: `3rem` between major sections, `1.5rem` within a section
+
+#### Border Radius
+
+| Context | Value |
+|---|---|
+| Buttons, inputs, filter chips | `0.5rem` (8px) |
+| Textareas, large containers | `0.75rem` (12px) |
+| Avatars / circles | `50%` |
+| Pill tags / rounded badges | `9999px` |
+| Small tag chips (table) | `4px` |
+
+#### Borders & Dividers
+
+- All dividers: `1px solid rgba(72, 72, 71, 0.10–0.15)` — very subtle
+- Input borders: `1px solid var(--color-outline-variant)` (`#484847`)
+- Name field (form): bottom-border only — `2px solid rgba(72, 72, 71, 0.3)` — editorial, no box
+- Border hover: `rgba(72, 72, 71, 0.4)`
+- Active filter border: `rgba(0, 104, 117, 0.45)`
+
+#### Shadows
+
+- Dropdowns / overlays: `0 8px 24px rgba(0, 0, 0, 0.45)` — deep shadow
+- Nav dropdown: `0 4px 16px rgba(0, 0, 0, 0.15)`
+- Input focus ring (textarea): `0 0 0 1px rgba(0, 227, 253, 0.15)` with cyan border
+
+#### Transitions
+
+- Default duration: `0.15s` for `color`, `background`, `border-color`
+- Slower: `0.2s` for `border-color`, `box-shadow` (form inputs), `opacity`
+- Scale transforms: `0.15s`
+- Always list transition properties explicitly — never use `transition: all`
+
+#### Interactive Patterns
+
+**Table rows**
+- Cursor: pointer
+- Hover: background → `--color-surface-container-low`; exercise name → `--color-primary` (lime); accent bar (6px × 32px vertical pill, `--color-primary`) fades from `opacity: 0.2` to `opacity: 1`
+
+**Navigation links**
+- Inactive: color `--color-on-surface-variant`
+- Hover: color `--color-on-surface` + background `--color-surface-container-low`
+- Active: color `--color-primary-dim` + background `--color-surface-container`
+
+**Primary CTA button** ("Add Exercise" style)
+```scss
+background: linear-gradient(135deg, #f3ffca 0%, #cafd00 100%);
+color: #3a4a00;
+font-family: "Lexend", sans-serif;
+font-weight: 900;
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+border-radius: 0.5rem;
+
+&:hover { transform: scale(1.04); filter: brightness(1.06); }
+&:active { transform: scale(0.97); }
+```
+
+**Input focus states**
+- Bottom-border inputs: border-bottom → `--color-secondary` (cyan)
+- Box inputs (textarea): `border-color: rgba(0, 227, 253, 0.4)` + `box-shadow: 0 0 0 1px rgba(0, 227, 253, 0.15)`
+
+**Form section labels** — use `--color-secondary` (cyan) for all field labels and section headers
+
+**Danger / destructive color** — `#ff7351` (coral-orange) exclusively for inline errors, delete action hover, and other destructive UI. Never use for neutral states.
+
+**Filter count badges** — `background: #006875`, `color: #e8fbff`, `border-radius: 999px`
+
+**Active filter state** — `background: rgba(0, 104, 117, 0.18)`, `color: #4dd9ec`, `border-color: rgba(0, 104, 117, 0.45)`
+
+#### Scrollbars (sidebar / overflow areas)
+```scss
+&::-webkit-scrollbar { width: 4px; }
+&::-webkit-scrollbar-track { background: transparent; }
+&::-webkit-scrollbar-thumb { background: rgba(72, 72, 71, 0.4); border-radius: 2px; }
+```
+
 ## State Management
 
 - **Auth state**: React Context + `useReducer` (in `components/authentication/`)

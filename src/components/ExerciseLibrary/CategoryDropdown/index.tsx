@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import TagFilter from "../../TagFilter";
-import "./style.scss";
+import { useState, useEffect, useRef, useCallback } from 'react';
+import TagFilter from '../../TagFilter';
+import './style.scss';
 
 interface CategoryDropdownProps {
   selectedTagIds: string[];
@@ -23,24 +23,30 @@ const CategoryDropdown = ({
 
   // Close on click outside and apply immediately
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      return;
+    }
     const handleClickOutside = (e: MouseEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target as Node)
       ) {
-        if (debounceRef.current) clearTimeout(debounceRef.current);
+        if (debounceRef.current) {
+          clearTimeout(debounceRef.current);
+        }
         setOpen(false);
         onApply(pendingTagIds);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open, pendingTagIds, onApply]);
 
   const scheduleApply = useCallback(
     (nextTagIds: string[]) => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
       debounceRef.current = setTimeout(() => {
         onApply(nextTagIds);
       }, 300);
@@ -54,14 +60,16 @@ const CategoryDropdown = ({
   };
 
   const handleClose = () => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
     setOpen(false);
     onApply(pendingTagIds);
   };
 
   const label =
     pendingTagIds.length === 0
-      ? "ALL TAGS"
+      ? 'ALL TAGS'
       : `${pendingTagIds.length} SELECTED`;
 
   return (
@@ -82,7 +90,9 @@ const CategoryDropdown = ({
               aria-label="Clear tag filters"
               onClick={(e) => {
                 e.stopPropagation();
-                if (debounceRef.current) clearTimeout(debounceRef.current);
+                if (debounceRef.current) {
+                  clearTimeout(debounceRef.current);
+                }
                 setPendingTagIds([]);
                 onApply([]);
                 setOpen(false);
@@ -92,7 +102,7 @@ const CategoryDropdown = ({
             </span>
           )}
           <span className="material-symbols-outlined category-chevron">
-            {open ? "expand_less" : "expand_more"}
+            {open ? 'expand_less' : 'expand_more'}
           </span>
         </span>
       </button>

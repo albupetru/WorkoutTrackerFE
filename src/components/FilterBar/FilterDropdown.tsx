@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 interface FilterDropdownProps {
   label: string;
@@ -17,7 +17,9 @@ const FilterDropdown = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      return;
+    }
     const handler = (e: MouseEvent) => {
       if (
         containerRef.current &&
@@ -26,8 +28,8 @@ const FilterDropdown = ({
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
   const hasSelection = selectedCount > 0;
@@ -36,7 +38,7 @@ const FilterDropdown = ({
     <div className="fdd" ref={containerRef}>
       <button
         type="button"
-        className={`fdd-btn${hasSelection ? " fdd-btn--active" : ""}${open ? " fdd-btn--open" : ""}`}
+        className={`fdd-btn${hasSelection ? ' fdd-btn--active' : ''}${open ? ' fdd-btn--open' : ''}`}
         aria-expanded={open}
         aria-haspopup="listbox"
         onClick={() => setOpen((v) => !v)}
@@ -44,7 +46,7 @@ const FilterDropdown = ({
         <span className="fdd-label">{label}</span>
         {hasSelection && <span className="fdd-badge">{selectedCount}</span>}
         <span className="material-symbols-outlined fdd-chevron">
-          {open ? "expand_less" : "expand_more"}
+          {open ? 'expand_less' : 'expand_more'}
         </span>
       </button>
 
