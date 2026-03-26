@@ -1,44 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTagGroups } from '../../hooks/useTags';
 import { Tag, TagGroup } from '../../types/tag.types';
+import { SECTION_LABELS, SECTION_ORDER } from '../../utils/tagConstants';
+import { getLeafTags } from '../../utils/tagUtils';
 import FilterDropdown from './FilterDropdown';
 import './style.scss';
-
-const SECTION_LABELS: Record<string, string> = {
-  BodyZone: 'Muscles',
-  Equipment: 'Equipment',
-  MuscleActivationPattern: 'Activation Pattern',
-  Laterality: 'Laterality',
-  MovementPattern: 'Movement Pattern',
-  ExerciseType: 'Exercise Type',
-  Discipline: 'Discipline',
-  TrainingSplit: 'Training Split',
-  Comfort: 'Comfort',
-  Miscellaneous: 'Other',
-};
-
-const SECTION_ORDER = [
-  'BodyZone',
-  'Equipment',
-  'MuscleActivationPattern',
-  'Laterality',
-  'MovementPattern',
-  'ExerciseType',
-  'Discipline',
-  'TrainingSplit',
-  'Comfort',
-  'Miscellaneous',
-];
-
-// Returns the selectable (leaf) tag IDs for a top-level group
-function getLeafIds(group: TagGroup): string[] {
-  if (group.tagType === 'BodyZone') {
-    const mfg = group.tagGroups?.find((g) => g.tagType === 'MuscleFamily');
-    const mgg = mfg?.tagGroups?.find((g) => g.tagType === 'MuscleGroup');
-    return (mgg?.tags ?? []).map((t) => t.id);
-  }
-  return group.tags.map((t) => t.id);
-}
 
 // ---- Checkbox with indeterminate support ----
 const CheckboxOption = ({
@@ -315,7 +281,7 @@ const FilterBar = ({
   return (
     <>
       {sorted.map((group) => {
-        const leafIds = getLeafIds(group);
+        const leafIds = getLeafTags(group).map((t) => t.id);
         const leafSet = new Set(leafIds);
         const sectionSelected = selectedTagIds.filter((id) => leafSet.has(id));
 

@@ -6,6 +6,10 @@ import {
   useUpdateExercise,
 } from '../../api/exercises';
 import useAuth from '../authentication/useAuth';
+import TagSelect from '../TagSelect';
+import { REQUIRED_SECTIONS } from '../TagSelect/tagUtils';
+import { getLeafTags } from '../../utils/tagUtils';
+import { useTagGroups } from '../../hooks/useTags';
 import './style.scss';
 
 interface ExerciseFormProps {
@@ -31,11 +35,13 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   const [nameError, setNameError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [stepsError, setStepsError] = useState('');
-  // const [tagsError, setTagsError] = useState(""); // TODO: re-enable with tag dropdowns
+  const [tagsError, setTagsError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const stepInputRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
+
+  const { data: tagGroups = [] } = useTagGroups();
 
   // Populate form in edit mode
   useEffect(() => {
@@ -163,18 +169,25 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
     } else {
       setStepsError('');
     }
-    // TODO: tag validation — re-enable when tag dropdowns are implemented
-    // if (tagIds.length === 0) {
-    //   setTagsError("At least one tag is required");
-    //   valid = false;
-    // } else {
-    //   setTagsError("");
-    // }
+    const missingCategory = tagGroups
+      .filter((g) => REQUIRED_SECTIONS.has(g.tagType))
+      .some((g) => {
+        const leafIds = getLeafTags(g).map((t) => t.id);
+        return !tagIds.some((id) => leafIds.includes(id));
+      });
+    if (missingCategory) {
+      setTagsError(
+        'All highlighted tag categories require at least one selection',
+      );
+      valid = false;
+    } else {
+      setTagsError('');
+    }
     return valid;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // we prevent default form submission to handle validation and async logic manually
     setSubmitted(true);
     if (!validate()) {
       if (!name.trim()) {
@@ -411,8 +424,40 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
           </div>
         </section>
 
-        {/* TODO: Tags section — re-enable with per-section FilterBar dropdowns */}
-        {/* <section className="exercise-form-tags-section">...</section> */}
+        <section className="exercise-form-tags-section">
+          <label className="exercise-form-label">
+            Tags{' '}
+            <span className="exercise-form-label-optional">
+              (Comfort optional)
+            </span>
+          </label>
+          <TagSelect
+            selectedTagIds={tagIds}
+            onChange={(ids) => {
+              setTagIds(ids);
+              setIsDirty(true);
+              if (submitted && tagsError) {
+                const missing = tagGroups
+                  .filter((g) => REQUIRED_SECTIONS.has(g.tagType))
+                  .some((g) => {
+                    const leafIds = getLeafTags(g).map((t) => t.id);
+                    return !ids.some((id) => leafIds.includes(id));
+                  });
+                setTagsError(
+                  missing
+                    ? 'All highlighted tag categories require at least one selection'
+                    : '',
+                );
+              }
+            }}
+            showErrors={submitted}
+          />
+          {tagsError && (
+            <span className="exercise-form-error" role="alert">
+              {tagsError}
+            </span>
+          )}
+        </section>
 
         {errorMessage && (
           <div className="exercise-form-error-banner" role="alert">
