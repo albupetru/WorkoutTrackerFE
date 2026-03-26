@@ -46,10 +46,7 @@ const tableConfiguration = ({
     ),
     accessorKey: "name",
     cell: ({ row }) => (
-      <NameCell
-        exerciseId={row.original.id}
-        exerciseName={row.original.name}
-      />
+      <NameCell exerciseId={row.original.id} exerciseName={row.original.name} />
     ),
   },
   {
