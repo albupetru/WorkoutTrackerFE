@@ -1,17 +1,12 @@
-import { jwtDecode } from "jwt-decode";
-import {
-  getDefaultRequestHeader,
-  setDefaultRequestHeader,
-  removeDefaultRequestHeader,
-  authenticatedFetch,
-} from "../../utils/requestUtils";
-import { CodeResponse } from "@react-oauth/google";
-import { UserData } from "../../types/userData.type";
-import { UserRole } from "../../types/UserRole.type";
+import { jwtDecode } from 'jwt-decode';
+import { CodeResponse } from '@react-oauth/google';
+import { UserData } from '../../types/userData.type';
+import { UserRole } from '../../types/UserRole.type';
+import { apiClient } from '../../api/apiClient';
 
-const CLAIM_NAME = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
+const CLAIM_NAME = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name';
 const CLAIM_ROLE =
-  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role';
 
 interface JwtPayload {
   email: string;
@@ -26,7 +21,7 @@ interface JwtPayload {
  * @returns {boolean} Session validity status
  */
 export const isLoggedIn = async () => {
-  const requestToken = localStorage.getItem("requestToken");
+  const requestToken = localStorage.getItem('requestToken');
 
   if (requestToken == null || requestToken.length === 0) {
     return false;
@@ -41,21 +36,15 @@ export const isLoggedIn = async () => {
     return false;
   }
 
-  if (`Bearer ${requestToken}` !== getDefaultRequestHeader("Authorization")) {
-    setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
-  }
-
   return true;
 };
 
 export const setupUser = async (): Promise<UserData | null> => {
-  const requestToken = localStorage.getItem("requestToken");
-
-  setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
+  const requestToken = localStorage.getItem('requestToken');
 
   if (requestToken !== null) {
     const apiToken = jwtDecode(requestToken) as JwtPayload;
-    console.log("apiToken", apiToken);
+    console.log('apiToken', apiToken);
     const email = apiToken.email;
     const userId = apiToken.oid;
     const name = apiToken[CLAIM_NAME];
@@ -80,22 +69,15 @@ export const logIn = (
   googleResponse: CodeResponse,
   successCallback: () => void,
 ) => {
-  fetch("/api/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ code: googleResponse.code }),
-  })
-    .then((response) => response.json())
+  apiClient
+    .post<string | { token: string }>('/login', { code: googleResponse.code })
     .then((data) => {
-      const requestToken = typeof data === "string" ? data : data.token;
-      localStorage.setItem("requestToken", requestToken);
-      setDefaultRequestHeader("Authorization", `Bearer ${requestToken}`);
+      const requestToken = typeof data === 'string' ? data : data.token;
+      localStorage.setItem('requestToken', requestToken);
       successCallback();
     })
     .catch((error) => {
-      console.error("Error:", error);
+      console.error('Error:', error);
     });
 };
 
@@ -103,10 +85,7 @@ export const logOut = async () => {
   const userLoggedIn = await isLoggedIn();
   // if a session is active, invalidate the API token
   if (userLoggedIn) {
-    authenticatedFetch("/api/logout", {
-      method: "POST",
-    });
+    apiClient.post('/logout').catch(() => {});
   }
-  removeDefaultRequestHeader("Authorization");
-  localStorage.removeItem("requestToken");
+  localStorage.removeItem('requestToken');
 };

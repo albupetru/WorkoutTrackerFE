@@ -5,6 +5,7 @@ import {
   useVerifyExercise,
 } from '../../api/exercises';
 import useAuth from '../authentication/useAuth';
+import { getExercisePermissions } from '../../utils/exercisePermissions';
 import './style.scss';
 
 const ExerciseDetail = () => {
@@ -64,10 +65,7 @@ const ExerciseDetail = () => {
     );
   }
 
-  const isVerified = !!exercise.verifiedOn;
-  const canEdit = userLoaded && (isAdmin || !isVerified);
-  const canDelete = canEdit;
-  const canVerify = userLoaded && isAdmin && !isVerified;
+  const { canEdit, canDelete, canVerify } = getExercisePermissions(exercise, isAdmin, userLoaded);
 
   const words = exercise.name.toUpperCase().split(' ');
   const titleFirstWord = words[0];

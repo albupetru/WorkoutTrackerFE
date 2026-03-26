@@ -1,4 +1,4 @@
-import { ApiException } from "./types";
+import { ApiException } from './types';
 
 class ApiClient {
   private baseURL: string;
@@ -8,9 +8,9 @@ class ApiClient {
   }
 
   private getAuthHeaders(): HeadersInit {
-    const token = localStorage.getItem("requestToken");
+    const token = localStorage.getItem('requestToken');
     return {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       ...(token && { Authorization: `Bearer ${token}` }),
     };
   }
@@ -28,8 +28,8 @@ class ApiClient {
     }
 
     if (response.status === 401) {
-      localStorage.removeItem("requestToken");
-      window.location.href = "/login";
+      localStorage.removeItem('requestToken');
+      window.location.href = '/login';
     }
 
     throw new ApiException(response.status, errorMessage, details);
@@ -57,7 +57,7 @@ class ApiClient {
 
       if (
         response.status === 204 ||
-        response.headers.get("content-length") === "0"
+        response.headers.get('content-length') === '0'
       ) {
         return undefined as T;
       }
@@ -69,7 +69,7 @@ class ApiClient {
       }
       throw new ApiException(
         0,
-        error instanceof Error ? error.message : "Network request failed",
+        error instanceof Error ? error.message : 'Network request failed',
         error,
       );
     }
@@ -77,14 +77,14 @@ class ApiClient {
 
   async get<T>(
     endpoint: string,
-    options?: { params?: Record<string, any> },
+    options?: { params?: Record<string, string | number | boolean> },
   ): Promise<T> {
     let url = endpoint;
 
     if (options?.params) {
       const searchParams = new URLSearchParams();
       Object.entries(options.params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== "") {
+        if (value !== undefined && value !== null && value !== '') {
           searchParams.append(key, String(value));
         }
       });
@@ -94,34 +94,34 @@ class ApiClient {
       }
     }
 
-    return this.request<T>(url, { method: "GET" });
+    return this.request<T>(url, { method: 'GET' });
   }
 
   async post<T>(endpoint: string, body?: unknown): Promise<T> {
     return this.request<T>(endpoint, {
-      method: "POST",
+      method: 'POST',
       body: body ? JSON.stringify(body) : undefined,
     });
   }
 
   async put<T>(endpoint: string, body?: unknown): Promise<T> {
     return this.request<T>(endpoint, {
-      method: "PUT",
+      method: 'PUT',
       body: body ? JSON.stringify(body) : undefined,
     });
   }
 
   async patch<T>(endpoint: string, body?: unknown): Promise<T> {
     return this.request<T>(endpoint, {
-      method: "PATCH",
+      method: 'PATCH',
       body: body ? JSON.stringify(body) : undefined,
     });
   }
 
   async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: "DELETE" });
+    return this.request<T>(endpoint, { method: 'DELETE' });
   }
 }
 
-const baseURL = import.meta.env.VITE_API_URL || "/api";
+const baseURL = import.meta.env.VITE_API_URL || '/api';
 export const apiClient = new ApiClient(baseURL);

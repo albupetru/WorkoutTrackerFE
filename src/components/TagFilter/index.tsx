@@ -1,38 +1,12 @@
 import { useState } from 'react';
 import { useTagGroups } from '../../hooks/useTags';
 import { Tag, TagGroup } from '../../types/tag.types';
+import { SECTION_LABELS } from '../../utils/tagConstants';
+import {
+  buildTagHierarchyMaps,
+  sortTagGroupsBySectionOrder,
+} from '../../utils/tagUtils';
 import './style.scss';
-
-interface TagFilterProps {
-  selectedTagIds: string[];
-  onChange: (selectedTagIds: string[]) => void;
-}
-
-const SECTION_LABELS: Record<string, string> = {
-  BodyZone: 'Muscles',
-  Equipment: 'Equipment',
-  MuscleActivationPattern: 'Activation Pattern',
-  Laterality: 'Laterality',
-  MovementPattern: 'Movement Pattern',
-  ExerciseType: 'Exercise Type',
-  Discipline: 'Discipline',
-  TrainingSplit: 'Training Split',
-  Comfort: 'Comfort',
-  Miscellaneous: 'Other',
-};
-
-const SECTION_ORDER = [
-  'BodyZone',
-  'Equipment',
-  'MuscleActivationPattern',
-  'Laterality',
-  'MovementPattern',
-  'ExerciseType',
-  'Discipline',
-  'TrainingSplit',
-  'Comfort',
-  'Miscellaneous',
-];
 
 interface TagFilterProps {
   selectedTagIds: string[];
@@ -91,13 +65,8 @@ const BodyZoneSection = ({
   selectedTagIds: string[];
   onToggle: (id: string) => void;
 }) => {
-  // muscleFamilyGroup is nested inside bodyZoneGroup.tagGroups
-  const muscleFamilyGroup = bodyZoneGroup.tagGroups?.find(
-    (g) => g.tagType === 'MuscleFamily',
-  );
-  const muscleGroupGroup = muscleFamilyGroup?.tagGroups?.find(
-    (g) => g.tagType === 'MuscleGroup',
-  );
+  const { muscleFamilyGroup, zoneToFamilies, familyToGroups } =
+    buildTagHierarchyMaps(bodyZoneGroup);
 
   const [openFamilies, setOpenFamilies] = useState<Record<string, boolean>>(
     () =>
@@ -108,35 +77,6 @@ const BodyZoneSection = ({
 
   const toggleFamily = (id: string) =>
     setOpenFamilies((prev) => ({ ...prev, [id]: !prev[id] }));
-
-  // Build a map: muscleFamilyTag.id → muscleGroupTags[]
-  // Using parentId on MuscleGroup tags
-  const familyToGroups = new Map<string, Tag[]>();
-  if (muscleGroupGroup) {
-    for (const mgTag of muscleGroupGroup.tags) {
-      const pid = mgTag.parentId;
-      if (pid) {
-        if (!familyToGroups.has(pid)) {
-          familyToGroups.set(pid, []);
-        }
-        familyToGroups.get(pid)!.push(mgTag);
-      }
-    }
-  }
-
-  // Group muscleFamilyTags by their parentId (bodyZoneTag.id)
-  const zoneToFamilies = new Map<string, Tag[]>();
-  if (muscleFamilyGroup) {
-    for (const mfTag of muscleFamilyGroup.tags) {
-      const pid = mfTag.parentId;
-      if (pid) {
-        if (!zoneToFamilies.has(pid)) {
-          zoneToFamilies.set(pid, []);
-        }
-        zoneToFamilies.get(pid)!.push(mfTag);
-      }
-    }
-  }
 
   return (
     <>
@@ -231,11 +171,7 @@ const TagFilter = ({ selectedTagIds, onChange }: TagFilterProps) => {
   }
 
   // Sort groups by SECTION_ORDER, unknown types appended at end
-  const sorted = [...tagGroups].sort((a, b) => {
-    const ai = SECTION_ORDER.indexOf(a.tagType);
-    const bi = SECTION_ORDER.indexOf(b.tagType);
-    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
-  });
+  const sorted = sortTagGroupsBySectionOrder(tagGroups);
 
   return (
     <div className="tag-filter" role="group" aria-label="Filter by tags">

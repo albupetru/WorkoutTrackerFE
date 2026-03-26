@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Exercise } from '../../../types/exercise.types';
 import { useDeleteExercise, useVerifyExercise } from '../../../api/exercises';
 import useAuth from '../../authentication/useAuth';
+import { getExercisePermissions } from '../../../utils/exercisePermissions';
 import Button from '../../Button';
 import './style.scss';
 
@@ -19,10 +20,11 @@ const ActionButtons = ({ exercise }: ActionButtonsProps) => {
     return null;
   }
 
-  const isVerified = !!exercise.verifiedOn;
-  const canEdit = isAdmin || !isVerified;
-  const canDelete = canEdit;
-  const canVerify = isAdmin && !isVerified;
+  const { canEdit, canDelete, canVerify } = getExercisePermissions(
+    exercise,
+    isAdmin,
+    userLoaded,
+  );
 
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${exercise.name}"?`)) {

@@ -7,7 +7,7 @@ import {
 } from '../../api/exercises';
 import useAuth from '../authentication/useAuth';
 import TagSelect from '../TagSelect';
-import { REQUIRED_SECTIONS } from '../TagSelect/tagUtils';
+import { REQUIRED_SECTIONS } from '../../utils/tagConstants';
 import { getLeafTags } from '../../utils/tagUtils';
 import { useTagGroups } from '../../hooks/useTags';
 import './style.scss';

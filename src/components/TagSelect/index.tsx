@@ -1,40 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTagGroups } from '../../hooks/useTags';
 import { Tag, TagGroup } from '../../types/tag.types';
-import { SECTION_LABELS, SECTION_ORDER } from '../../utils/tagConstants';
-import { getLeafTags } from '../../utils/tagUtils';
+import {
+  SECTION_LABELS,
+  SECTION_ORDER,
+  REQUIRED_SECTIONS,
+} from '../../utils/tagConstants';
+import { getLeafTags, getMuscleSubgroups } from '../../utils/tagUtils';
 import './style.scss';
-
-const REQUIRED_SECTIONS = new Set([
-  'BodyZone',
-  'Equipment',
-  'MuscleActivationPattern',
-  'Laterality',
-  'MovementPattern',
-  'ExerciseType',
-  'Discipline',
-  'TrainingSplit',
-  'Miscellaneous',
-]);
-
-function getMuscleSubgroups(
-  group: TagGroup,
-): { label: string; tags: Tag[] }[] | null {
-  if (group.tagType !== 'BodyZone') {
-    return null;
-  }
-  const mfg = group.tagGroups?.find((g) => g.tagType === 'MuscleFamily');
-  const mgg = mfg?.tagGroups?.find((g) => g.tagType === 'MuscleGroup');
-  if (!mfg || !mgg) {
-    return null;
-  }
-  return mfg.tags
-    .map((family) => ({
-      label: family.name,
-      tags: mgg.tags.filter((mg) => mg.parentId === family.id),
-    }))
-    .filter((g) => g.tags.length > 0);
-}
 
 // ---- Individual dropdown ----
 interface TagDropdownProps {
@@ -65,6 +38,8 @@ const TagDropdown = ({
   );
   const selectedSet = new Set(sectionSelected);
 
+  // TODO: Extract click-outside + Escape key logic into a shared useClickOutside hook
+  // (duplicated in FilterDropdown.tsx and FilterBar/index.tsx)
   useEffect(() => {
     if (!open) {
       return;

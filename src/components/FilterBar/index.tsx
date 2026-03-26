@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTagGroups } from '../../hooks/useTags';
 import { Tag, TagGroup } from '../../types/tag.types';
-import { SECTION_LABELS, SECTION_ORDER } from '../../utils/tagConstants';
-import { getLeafTags } from '../../utils/tagUtils';
+import { SECTION_LABELS } from '../../utils/tagConstants';
+import {
+  getLeafTags,
+  buildTagHierarchyMaps,
+  sortTagGroupsBySectionOrder,
+} from '../../utils/tagUtils';
 import FilterDropdown from './FilterDropdown';
 import './style.scss';
 
@@ -78,35 +82,10 @@ const MusclePanel = ({
   selectedTagIds: string[];
   onChange: (ids: string[]) => void;
 }) => {
-  const muscleFamilyGroup = bodyZoneGroup.tagGroups?.find(
-    (g) => g.tagType === 'MuscleFamily',
-  );
-  const muscleGroupGroup = muscleFamilyGroup?.tagGroups?.find(
-    (g) => g.tagType === 'MuscleGroup',
-  );
+  const { zoneToFamilies, familyToGroups: familyToLeaves } =
+    buildTagHierarchyMaps(bodyZoneGroup);
 
   const selectedSet = new Set(selectedTagIds);
-
-  // Build lookup maps
-  const zoneToFamilies = new Map<string, Tag[]>();
-  for (const mf of muscleFamilyGroup?.tags ?? []) {
-    if (mf.parentId) {
-      if (!zoneToFamilies.has(mf.parentId)) {
-        zoneToFamilies.set(mf.parentId, []);
-      }
-      zoneToFamilies.get(mf.parentId)!.push(mf);
-    }
-  }
-
-  const familyToLeaves = new Map<string, Tag[]>();
-  for (const mg of muscleGroupGroup?.tags ?? []) {
-    if (mg.parentId) {
-      if (!familyToLeaves.has(mg.parentId)) {
-        familyToLeaves.set(mg.parentId, []);
-      }
-      familyToLeaves.get(mg.parentId)!.push(mg);
-    }
-  }
 
   const getZoneLeafIds = (zoneId: string) =>
     (zoneToFamilies.get(zoneId) ?? []).flatMap((f) =>
@@ -272,11 +251,7 @@ const FilterBar = ({
     return null;
   }
 
-  const sorted = [...tagGroups].sort((a, b) => {
-    const ai = SECTION_ORDER.indexOf(a.tagType);
-    const bi = SECTION_ORDER.indexOf(b.tagType);
-    return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
-  });
+  const sorted = sortTagGroupsBySectionOrder(tagGroups);
 
   return (
     <>

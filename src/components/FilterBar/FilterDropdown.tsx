@@ -16,6 +16,8 @@ const FilterDropdown = ({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // TODO: Extract click-outside logic into a shared useClickOutside hook
+  // (duplicated in TagSelect/index.tsx and FilterBar/index.tsx)
   useEffect(() => {
     if (!open) {
       return;
