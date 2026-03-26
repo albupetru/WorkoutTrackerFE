@@ -5,7 +5,6 @@ import {
   useCreateExercise,
   useUpdateExercise,
 } from "../../api/exercises";
-import { useTags } from "../../hooks/useTags";
 import useAuth from "../authentication/useAuth";
 import "./style.scss";
 
@@ -21,7 +20,6 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   const { data: exercise, isLoading: exerciseLoading } = useExercise(
     mode === "edit" ? id : undefined,
   );
-  const { data: tags } = useTags();
 
   const createMutation = useCreateExercise();
   const updateMutation = useUpdateExercise();
@@ -33,7 +31,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   const [nameError, setNameError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [stepsError, setStepsError] = useState("");
-  const [tagsError, setTagsError] = useState("");
+  // const [tagsError, setTagsError] = useState(""); // TODO: re-enable with tag dropdowns
   const [submitted, setSubmitted] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -144,18 +142,6 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
     });
   };
 
-  const toggleTag = (tagId: string) => {
-    setIsDirty(true);
-    setTagIds((prev) => {
-      const next = prev.includes(tagId)
-        ? prev.filter((id) => id !== tagId)
-        : [...prev, tagId];
-      if (submitted)
-        setTagsError(next.length === 0 ? "At least one tag is required" : "");
-      return next;
-    });
-  };
-
   const validate = () => {
     let valid = true;
     if (!name.trim()) {
@@ -176,12 +162,13 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
     } else {
       setStepsError("");
     }
-    if (tagIds.length === 0) {
-      setTagsError("At least one tag is required");
-      valid = false;
-    } else {
-      setTagsError("");
-    }
+    // TODO: tag validation — re-enable when tag dropdowns are implemented
+    // if (tagIds.length === 0) {
+    //   setTagsError("At least one tag is required");
+    //   valid = false;
+    // } else {
+    //   setTagsError("");
+    // }
     return valid;
   };
 
@@ -417,52 +404,8 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
           </div>
         </section>
 
-        <section
-          className="exercise-form-tags-section"
-          onBlur={(e) => {
-            if (
-              submitted &&
-              !e.currentTarget.contains(e.relatedTarget as Node)
-            ) {
-              setTagsError(
-                tagIds.length === 0 ? "At least one tag is required" : "",
-              );
-            }
-          }}
-        >
-          <label className="exercise-form-label">
-            Tags{" "}
-            <span className="exercise-form-label-optional">(required)</span>
-          </label>
-          {tagsError && (
-            <span className="exercise-form-error" role="alert">
-              {tagsError}
-            </span>
-          )}
-          <div className="exercise-form-tag-chips">
-            {tags && tags.length > 0 ? (
-              tags.map((tag) => {
-                const selected = tagIds.includes(tag.id);
-                return (
-                  <button
-                    key={tag.id}
-                    type="button"
-                    className={`exercise-form-chip${selected ? " exercise-form-chip--selected" : ""}`}
-                    onClick={() => toggleTag(tag.id)}
-                    aria-pressed={selected}
-                  >
-                    {tag.name}
-                    {selected && (
-                      <span className="material-symbols-outlined">close</span>
-                    )}
-                  </button>
-                );
-              })
-            ) : (
-              <span className="exercise-form-tags-empty">Loading tags...</span>
-            )}
-          </div>
-        </section>
+        {/* TODO: Tags section — re-enable with per-section FilterBar dropdowns */}
+        {/* <section className="exercise-form-tags-section">...</section> */}
 
         {errorMessage && (
           <div className="exercise-form-error-banner" role="alert">

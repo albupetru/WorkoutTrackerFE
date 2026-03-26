@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useTags } from "../../../hooks/useTags";
+import TagFilter from "../../TagFilter";
 import "./style.scss";
 
 interface CategoryDropdownProps {
@@ -11,12 +11,9 @@ const CategoryDropdown = ({
   selectedTagIds,
   onApply,
 }: CategoryDropdownProps) => {
-  const { data: tags } = useTags();
   const [open, setOpen] = useState(false);
   const [pendingTagIds, setPendingTagIds] = useState<string[]>(selectedTagIds);
-  const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync pending state when prop changes externally
@@ -34,7 +31,6 @@ const CategoryDropdown = ({
       ) {
         if (debounceRef.current) clearTimeout(debounceRef.current);
         setOpen(false);
-        setSearch("");
         onApply(pendingTagIds);
       }
     };
@@ -52,20 +48,14 @@ const CategoryDropdown = ({
     [onApply],
   );
 
-  const toggleTag = (tagId: string) => {
-    setPendingTagIds((prev) => {
-      const next = prev.includes(tagId)
-        ? prev.filter((id) => id !== tagId)
-        : [...prev, tagId];
-      scheduleApply(next);
-      return next;
-    });
+  const handleChange = (nextTagIds: string[]) => {
+    setPendingTagIds(nextTagIds);
+    scheduleApply(nextTagIds);
   };
 
   const handleClose = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setOpen(false);
-    setSearch("");
     onApply(pendingTagIds);
   };
 
@@ -80,19 +70,22 @@ const CategoryDropdown = ({
         className="category-btn"
         onClick={() => (open ? handleClose() : setOpen(true))}
         type="button"
+        aria-expanded={open}
+        aria-haspopup="dialog"
       >
         {label}
         <span className="category-btn-icons">
           {pendingTagIds.length > 0 && (
             <span
               className="material-symbols-outlined category-clear"
+              role="button"
+              aria-label="Clear tag filters"
               onClick={(e) => {
                 e.stopPropagation();
                 if (debounceRef.current) clearTimeout(debounceRef.current);
                 setPendingTagIds([]);
                 onApply([]);
                 setOpen(false);
-                setSearch("");
               }}
             >
               close
@@ -104,53 +97,9 @@ const CategoryDropdown = ({
         </span>
       </button>
 
-      {open && tags && tags.length > 0 && (
-        <div className="dropdown-panel">
-          <div className="dropdown-search">
-            <span className="material-symbols-outlined dropdown-search-icon">
-              search
-            </span>
-            <input
-              ref={searchInputRef}
-              className="dropdown-search-input"
-              type="text"
-              placeholder="Search tags..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              autoFocus
-            />
-            {search && (
-              <button
-                className="dropdown-search-clear"
-                type="button"
-                onClick={() => setSearch("")}
-                aria-label="Clear search"
-              >
-                <span className="material-symbols-outlined">close</span>
-              </button>
-            )}
-          </div>
-          <div className="dropdown-options">
-            {tags
-              .filter((tag) =>
-                tag.name.toLowerCase().includes(search.toLowerCase()),
-              )
-              .map((tag) => (
-                <label key={tag.id} className="dropdown-option">
-                  <input
-                    type="checkbox"
-                    checked={pendingTagIds.includes(tag.id)}
-                    onChange={() => toggleTag(tag.id)}
-                  />
-                  {tag.name}
-                </label>
-              ))}
-            {tags.filter((tag) =>
-              tag.name.toLowerCase().includes(search.toLowerCase()),
-            ).length === 0 && (
-              <div className="dropdown-no-results">No tags found</div>
-            )}
-          </div>
+      {open && (
+        <div className="dropdown-panel" role="dialog" aria-label="Tag filters">
+          <TagFilter selectedTagIds={pendingTagIds} onChange={handleChange} />
         </div>
       )}
     </div>

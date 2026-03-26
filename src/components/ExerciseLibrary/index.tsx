@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ExerciseTable from "./ExerciseTable";
-import CategoryDropdown from "./CategoryDropdown";
+import FilterBar from "../FilterBar";
 import { ExerciseFilters as ExerciseFiltersType } from "../../types/exercise.types.tsx";
 import useAuth from "../authentication/useAuth";
 import "./style.scss";
@@ -23,6 +23,9 @@ const ExerciseLibrary = () => {
     useState<ExerciseFiltersType>(defaultFilterState);
   const [totalCount, setTotalCount] = useState(0);
   const [keywordInput, setKeywordInput] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const hasFilters = (filters.tagIds?.length ?? 0) > 0;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,7 +49,7 @@ const ExerciseLibrary = () => {
     }));
   };
 
-  const handleCategoryApply = (tagIds: string[]) => {
+  const handleTagChange = (tagIds: string[]) => {
     setFilters((f) => ({ ...f, tagIds, pageNumber: 1 }));
   };
 
@@ -61,42 +64,82 @@ const ExerciseLibrary = () => {
 
   return (
     <div>
-      <div className="library-top-bar">
-        <span className="material-symbols-outlined search-icon">search</span>
-        <input
-          className="library-search-input"
-          type="text"
-          placeholder="Search movements..."
-          value={keywordInput}
-          onChange={(e) => setKeywordInput(e.target.value)}
-        />
-        <CategoryDropdown
-          selectedTagIds={filters.tagIds ?? []}
-          onApply={handleCategoryApply}
-        />
-        {isAdmin && (
-          <label className="unverified-toggle">
-            <input
-              type="checkbox"
-              checked={filters.includeUnverified ?? false}
-              onChange={(e) => handleIncludeUnverifiedChange(e.target.checked)}
+      <div className="library-header">
+        <div className="library-top-bar">
+          <span className="material-symbols-outlined search-icon">search</span>
+          <input
+            className="library-search-input"
+            type="text"
+            placeholder="Search movements..."
+            value={keywordInput}
+            onChange={(e) => setKeywordInput(e.target.value)}
+          />
+          <button
+            type="button"
+            className={`library-filter-btn${
+              filtersOpen
+                ? " library-filter-btn--open"
+                : hasFilters
+                  ? " library-filter-btn--active"
+                  : ""
+            }`}
+            onClick={() => setFiltersOpen((v) => !v)}
+          >
+            <span className="material-symbols-outlined">tune</span>
+            Filters
+            {!filtersOpen && hasFilters && (
+              <span className="library-filter-badge">
+                {filters.tagIds?.length}
+              </span>
+            )}
+          </button>
+          {isAdmin && (
+            <label className="unverified-toggle">
+              <input
+                type="checkbox"
+                checked={filters.includeUnverified ?? false}
+                onChange={(e) =>
+                  handleIncludeUnverifiedChange(e.target.checked)
+                }
+              />
+              Show unverified
+            </label>
+          )}
+          <span className="count-display top-bar-count">
+            Displaying {displayedCount} of {totalCount} movements
+          </span>
+          <button
+            className="library-add-btn"
+            onClick={() => navigate("/exercise/new")}
+          >
+            <span className="material-symbols-outlined">add</span>
+            Add New
+          </button>
+        </div>
+
+        {filtersOpen && (
+          <div className="library-filter-row">
+            <FilterBar
+              selectedTagIds={filters.tagIds ?? []}
+              onChange={handleTagChange}
             />
-            Show unverified
-          </label>
+            {hasFilters && (
+              <button
+                type="button"
+                className="library-filter-clear-all"
+                onClick={() => handleTagChange([])}
+              >
+                <span className="material-symbols-outlined">close</span>
+                Clear all
+              </button>
+            )}
+          </div>
         )}
-        <span className="count-display top-bar-count">
-          Displaying {displayedCount} of {totalCount} movements
-        </span>
-        <button
-          className="library-add-btn"
-          onClick={() => navigate("/exercise/new")}
-        >
-          <span className="material-symbols-outlined">add</span>
-          Add New
-        </button>
       </div>
 
-      <div className="library-content">
+      <div
+        className={`library-content${filtersOpen ? " library-content--filters-open" : ""}`}
+      >
         <ExerciseTable
           filters={filters}
           onPageChange={handlePageChange}

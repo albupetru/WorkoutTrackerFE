@@ -1,21 +1,11 @@
 import { apiClient } from "./apiClient";
+import { Tag, TagGroup } from "../types/tag.types";
 
-export interface Tag {
-  id: string;
-  name: string;
-  type?: TagType;
-  description?: string;
-}
+export type { Tag, TagGroup };
+export type TagType = string;
 
-export type TagType = "MUSCLE_GROUP" | "EQUIPMENT" | "DIFFICULTY" | "OTHER";
-
-export interface TagGroup {
-  type: TagType;
-  tags: Tag[];
-}
-
-export const getTags = async (type?: TagType): Promise<Tag[]> => {
-  const params: Record<string, any> = {};
+export const getTags = async (type?: string): Promise<Tag[]> => {
+  const params: Record<string, string> = {};
 
   if (type) {
     params.type = type;
@@ -25,19 +15,5 @@ export const getTags = async (type?: TagType): Promise<Tag[]> => {
 };
 
 export const getTagGroups = async (): Promise<TagGroup[]> => {
-  const tags = await getTags();
-  const groupMap = new Map<TagType, Tag[]>();
-
-  tags.forEach((tag) => {
-    const type = tag.type || "OTHER";
-    if (!groupMap.has(type)) {
-      groupMap.set(type, []);
-    }
-    groupMap.get(type)!.push(tag);
-  });
-
-  return Array.from(groupMap.entries()).map(([type, tags]) => ({
-    type,
-    tags,
-  }));
+  return apiClient.get<TagGroup[]>("/tags/grouped");
 };
