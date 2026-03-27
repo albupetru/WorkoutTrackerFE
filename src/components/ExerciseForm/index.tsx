@@ -6,7 +6,8 @@ import {
   useUpdateExercise,
 } from '../../api/exercises';
 import useAuth from '../authentication/useAuth';
-import TagSelect from '../TagSelect';
+import TagSelect from './TagSelect';
+import StepInput from './StepInput';
 import { REQUIRED_SECTIONS } from '../../utils/tagConstants';
 import { getLeafTags } from '../../utils/tagUtils';
 import { useTagGroups } from '../../hooks/useTags';
@@ -37,7 +38,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   const [stepsError, setStepsError] = useState('');
   const [tagsError, setTagsError] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
+  const isDirtyRef = useRef(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const stepInputRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
 
@@ -79,7 +80,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   // Warn on browser close / refresh when there are unsaved changes
   // Block all React Router navigation when dirty
   useBlocker(() => {
-    if (isDirty) {
+    if (isDirtyRef.current) {
       return !window.confirm(
         'The changes you\'ve made to this exercise will be lost. Are you sure?',
       );
@@ -89,13 +90,13 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isDirty) {
+      if (isDirtyRef.current) {
         e.preventDefault();
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [isDirty]);
+  }, []);
 
   // Recalculate all step textarea heights whenever steps change (handles deletion shrink)
   useEffect(() => {
@@ -108,7 +109,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   }, [steps]);
 
   const addStep = () => {
-    setIsDirty(true);
+    isDirtyRef.current = true;
     setSteps((prev) => {
       const next = [...prev, ''];
       setTimeout(() => {
@@ -119,7 +120,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   };
 
   const updateStep = (index: number, value: string) => {
-    setIsDirty(true);
+    isDirtyRef.current = true;
     setSteps((prev) => {
       const next = prev.map((s, i) => (i === index ? value : s));
       if (submitted) {
@@ -134,7 +135,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
   };
 
   const removeStep = (index: number) => {
-    setIsDirty(true);
+    isDirtyRef.current = true;
     if (steps.length === 1) {
       setSteps(['']);
       return;
@@ -186,7 +187,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
     return valid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault(); // we prevent default form submission to handle validation and async logic manually
     setSubmitted(true);
     if (!validate()) {
@@ -208,7 +209,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
     if (mode === 'create') {
       createMutation.mutate(payload, {
         onSuccess: (exercise) => {
-          setIsDirty(false);
+          isDirtyRef.current = false;
           navigate(`/exercise/${exercise.id}`);
         },
       });
@@ -217,10 +218,73 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
         { ...payload, id: id! },
         {
           onSuccess: (exercise) => {
-            setIsDirty(false);
+            isDirtyRef.current = false;
             navigate(`/exercise/${exercise.id}`);
           },
         },
+      );
+    }
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    isDirtyRef.current = true;
+    if (submitted) {
+      setNameError(e.target.value.trim() ? '' : 'Exercise name is required');
+    }
+  };
+
+  const handleNameBlur = () => {
+    if (submitted) {
+      setNameError(name.trim() ? '' : 'Exercise name is required');
+    }
+  };
+
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setDescription(e.target.value);
+    isDirtyRef.current = true;
+    if (submitted) {
+      setDescriptionError(
+        e.target.value.trim() ? '' : 'Description is required',
+      );
+    }
+    const el = e.target;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  };
+
+  const handleDescriptionBlur = () => {
+    if (submitted) {
+      setDescriptionError(description.trim() ? '' : 'Description is required');
+    }
+  };
+
+  const handleStepBlur = () => {
+    if (submitted) {
+      setStepsError(
+        steps.some((s) => s.trim())
+          ? ''
+          : 'At least one instruction step is required',
+      );
+    }
+  };
+
+  const handleTagsChange = (ids: string[]) => {
+    setTagIds(ids);
+    isDirtyRef.current = true;
+    if (submitted && tagsError) {
+      const missing = tagGroups
+        .filter((g) => REQUIRED_SECTIONS.has(g.tagType))
+        .some((g) => {
+          const leafIds = getLeafTags(g).map((t) => t.id);
+          return !ids.some((id) => leafIds.includes(id));
+        });
+      setTagsError(
+        missing
+          ? 'All highlighted tag categories require at least one selection'
+          : '',
       );
     }
   };
@@ -258,15 +322,8 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
     <div className="exercise-form-wrapper">
       <div className="exercise-form-header">
         <h1 className="exercise-form-title">
-          {mode === 'create' ? (
-            <>
-              New <span className="accent">Exercise</span>
-            </>
-          ) : (
-            <>
-              Edit <span className="accent">Exercise</span>
-            </>
-          )}
+          {mode === 'create' ? 'New' : 'Edit'}{' '}
+          <span className="accent">Exercise</span>
         </h1>
       </div>
 
@@ -285,20 +342,8 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
               type="text"
               placeholder="e.g. BARBELL BULGARIAN SPLIT SQUAT"
               value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setIsDirty(true);
-                if (submitted) {
-                  setNameError(
-                    e.target.value.trim() ? '' : 'Exercise name is required',
-                  );
-                }
-              }}
-              onBlur={() => {
-                if (submitted) {
-                  setNameError(name.trim() ? '' : 'Exercise name is required');
-                }
-              }}
+              onChange={handleNameChange}
+              onBlur={handleNameBlur}
               maxLength={200}
               aria-required="true"
               aria-invalid={!!nameError}
@@ -320,25 +365,8 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
               placeholder="Describe the mechanical intent and focus of this movement..."
               rows={4}
               value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-                setIsDirty(true);
-                if (submitted) {
-                  setDescriptionError(
-                    e.target.value.trim() ? '' : 'Description is required',
-                  );
-                }
-                const el = e.target;
-                el.style.height = 'auto';
-                el.style.height = `${el.scrollHeight}px`;
-              }}
-              onBlur={() => {
-                if (submitted) {
-                  setDescriptionError(
-                    description.trim() ? '' : 'Description is required',
-                  );
-                }
-              }}
+              onChange={handleDescriptionChange}
+              onBlur={handleDescriptionBlur}
               maxLength={2000}
             />
             {descriptionError && (
@@ -371,55 +399,19 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
           )}
           <div className="exercise-form-steps">
             {steps.map((step, i) => (
-              <div key={i} className="exercise-form-step">
-                <span className="exercise-form-step-number">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <textarea
-                  ref={(el) => {
-                    stepInputRefs.current[i] = el;
-                  }}
-                  className="exercise-form-step-input"
-                  rows={1}
-                  placeholder={`Step ${i + 1}...`}
-                  value={step}
-                  onChange={(e) => {
-                    updateStep(i, e.target.value);
-                    const el = e.target;
-                    el.style.height = 'auto';
-                    el.style.height = `${el.scrollHeight}px`;
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addStep();
-                    }
-                    if (e.key === 'Backspace' && step === '') {
-                      e.preventDefault();
-                      removeStep(i);
-                    }
-                  }}
-                  onBlur={() => {
-                    if (submitted) {
-                      setStepsError(
-                        steps.some((s) => s.trim())
-                          ? ''
-                          : 'At least one instruction step is required',
-                      );
-                    }
-                  }}
-                />
-                {steps.length > 1 && (
-                  <button
-                    type="button"
-                    className="exercise-form-step-remove"
-                    onClick={() => removeStep(i)}
-                    aria-label="Remove step"
-                  >
-                    <span className="material-symbols-outlined">close</span>
-                  </button>
-                )}
-              </div>
+              <StepInput
+                key={i}
+                step={step}
+                index={i}
+                showRemove={steps.length > 1}
+                inputRef={(el) => {
+                  stepInputRefs.current[i] = el;
+                }}
+                onUpdate={updateStep}
+                onAdd={addStep}
+                onRemove={removeStep}
+                onBlur={handleStepBlur}
+              />
             ))}
           </div>
         </section>
@@ -433,23 +425,7 @@ const ExerciseForm = ({ mode }: ExerciseFormProps) => {
           </label>
           <TagSelect
             selectedTagIds={tagIds}
-            onChange={(ids) => {
-              setTagIds(ids);
-              setIsDirty(true);
-              if (submitted && tagsError) {
-                const missing = tagGroups
-                  .filter((g) => REQUIRED_SECTIONS.has(g.tagType))
-                  .some((g) => {
-                    const leafIds = getLeafTags(g).map((t) => t.id);
-                    return !ids.some((id) => leafIds.includes(id));
-                  });
-                setTagsError(
-                  missing
-                    ? 'All highlighted tag categories require at least one selection'
-                    : '',
-                );
-              }
-            }}
+            onChange={handleTagsChange}
             showErrors={submitted}
           />
           {tagsError && (

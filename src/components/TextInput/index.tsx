@@ -1,5 +1,5 @@
-import { ChangeEvent } from "react";
-import { stringIsNullUndefOrEmpty } from "../../utils/textUtils";
+import { ChangeEvent } from 'react';
+import { stringIsNullUndefOrEmpty } from '../../utils/textUtils';
 
 type TextInputProps = {
   value?: string;
@@ -16,7 +16,7 @@ const TextInput = ({
   isPassword = false,
   placeholder,
 }: TextInputProps) => {
-  const type = isPassword ? "password" : "text";
+  const type = isPassword ? 'password' : 'text';
 
   if (label === null || stringIsNullUndefOrEmpty(label)) {
     return (
@@ -34,7 +34,7 @@ const TextInput = ({
   return (
     <div className="text-input">
       <label>
-        {label}:{" "}
+        {label}:{' '}
         <input
           type={type}
           value={value}

@@ -44,7 +44,6 @@ export const setupUser = async (): Promise<UserData | null> => {
 
   if (requestToken !== null) {
     const apiToken = jwtDecode(requestToken) as JwtPayload;
-    console.log('apiToken', apiToken);
     const email = apiToken.email;
     const userId = apiToken.oid;
     const name = apiToken[CLAIM_NAME];
@@ -77,6 +76,7 @@ export const logIn = (
       successCallback();
     })
     .catch((error) => {
+      // TODO: handle login errors more gracefully (e.g. show error message to user)
       console.error('Error:', error);
     });
 };

@@ -1,5 +1,5 @@
-import { Exercise } from "../../../types/exercise.types";
-import "./style.scss";
+import { Exercise } from '../../../types/exercise.types';
+import './style.scss';
 
 interface StatusBadgeProps {
   exercise: Exercise;

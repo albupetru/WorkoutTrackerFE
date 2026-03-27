@@ -2,13 +2,13 @@ import {
   useReactTable,
   getCoreRowModel,
   flexRender,
-} from "@tanstack/react-table";
-import { useEffect, useMemo } from "react";
-import tableConfiguration from "./tableConfiguration";
-import { useExercises } from "../../../api/exercises";
-import { ExerciseFilters } from "../../../types/exercise.types.tsx";
-import Pagination from "../Pagination";
-import "./style.scss";
+} from '@tanstack/react-table';
+import { useEffect, useMemo } from 'react';
+import tableConfiguration from './tableConfiguration';
+import { useExercises } from '../../../api/exercises';
+import { ExerciseFilters } from '../../../types/exercise.types.tsx';
+import Pagination from '../Pagination';
+import './style.scss';
 
 interface ExerciseTableProps {
   filters: ExerciseFilters;
@@ -32,13 +32,13 @@ const ExerciseTable = ({
 
   useEffect(() => {
     onTotalCountChange(totalCount);
-  }, [totalCount]);
+  }, [totalCount, onTotalCountChange]);
 
   const columns = useMemo(
     () =>
       tableConfiguration({
-        sortBy: filters.sortBy ?? "name",
-        sortOrder: filters.sortOrder ?? "asc",
+        sortBy: filters.sortBy ?? 'name',
+        sortOrder: filters.sortOrder ?? 'asc',
         onSortChange,
       }),
     [filters.sortBy, filters.sortOrder, onSortChange],
@@ -62,7 +62,7 @@ const ExerciseTable = ({
   if (isError) {
     return (
       <div className="exercise-table-error">
-        <p>Error loading exercises: {error?.message || "Unknown error"}</p>
+        <p>Error loading exercises: {error?.message || 'Unknown error'}</p>
         <button onClick={() => refetch()}>Retry</button>
       </div>
     );

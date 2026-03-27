@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useTagGroups } from '../../hooks/useTags';
-import { Tag, TagGroup } from '../../types/tag.types';
-import { SECTION_LABELS } from '../../utils/tagConstants';
+import { useTagGroups } from '../../../../hooks/useTags';
+import { Tag, TagGroup } from '../../../../types/tag.types';
+import { SECTION_LABELS } from '../../../../utils/tagConstants';
 import {
   buildTagHierarchyMaps,
   sortTagGroupsBySectionOrder,
-} from '../../utils/tagUtils';
+} from '../../../../utils/tagUtils';
 import './style.scss';
 
 interface TagFilterProps {

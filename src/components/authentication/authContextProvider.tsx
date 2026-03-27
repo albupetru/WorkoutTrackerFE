@@ -1,10 +1,10 @@
-import { createContext, useReducer, useMemo, useEffect } from "react";
-import { setupUser, logOut, isLoggedIn } from "./authManager";
-import initialState from "./initialState";
-import reducer from "./reducer";
-import { setUser, clearUser } from "./reducerActions";
-import { UserData } from "../../types/userData.type";
-import { UserRole } from "../../types/UserRole.type";
+import { createContext, useReducer, useMemo, useEffect } from 'react';
+import { setupUser, logOut, isLoggedIn } from './authManager';
+import initialState from './initialState';
+import reducer from './reducer';
+import { setUser, clearUser } from './reducerActions';
+import { UserData } from '../../types/userData.type';
+import { UserRole } from '../../types/UserRole.type';
 
 export type AuthDataContextType = {
   onLogIn: () => Promise<void>;
@@ -25,11 +25,13 @@ export type AuthDataContextType = {
 
 export const AuthDataContext = createContext<AuthDataContextType | null>(null);
 
-type AuthDataProviderProps = {
+type AuthenticationContextProviderProps = {
   children: React.ReactNode;
 };
 
-const AuthDataProvider = (props: AuthDataProviderProps) => {
+const AuthenticationContextProvider = (
+  props: AuthenticationContextProviderProps,
+) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // Restore user session on mount if valid token exists
@@ -39,7 +41,7 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
         const loggedIn = await isLoggedIn();
         if (loggedIn) {
           const userdata = await setupUser();
-          console.log("userdata", userdata);
+
           if (userdata) {
             dispatch(setUser({ ...userdata, loading: false }));
           } else {
@@ -49,15 +51,14 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
           }
         } else {
           // Clear invalid/expired token
-          localStorage.removeItem("requestToken");
+          localStorage.removeItem('requestToken');
           dispatch(
             setUser({ ...initialState, loading: false, userLoaded: false }),
           );
         }
       } catch (error) {
-        console.error("Auth initialization error:", error);
         // Clear potentially corrupted tokens
-        localStorage.removeItem("requestToken");
+        localStorage.removeItem('requestToken');
         dispatch(
           setUser({ ...initialState, loading: false, userLoaded: false }),
         );
@@ -89,13 +90,15 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
 
   // Role checks
   const role = state.role;
-  const isAdmin = role === "Admin";
-  const isModerator = role === "ContentModerator";
-  const isUser = role === "User";
-  const isTrial = role === "Trial";
+  const isAdmin = role === 'Admin';
+  const isModerator = role === 'ContentModerator';
+  const isUser = role === 'User';
+  const isTrial = role === 'Trial';
 
   const isAtLeast = (minimumRole: UserRole): boolean => {
-    if (!role) return false;
+    if (!role) {
+      return false;
+    }
 
     const roleHierarchy: Record<UserRole, number> = {
       Admin: 4,
@@ -126,4 +129,4 @@ const AuthDataProvider = (props: AuthDataProviderProps) => {
   return <AuthDataContext.Provider value={authState} {...props} />;
 };
 
-export default AuthDataProvider;
+export default AuthenticationContextProvider;

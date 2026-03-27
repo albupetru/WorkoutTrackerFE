@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import TagFilter from '../../TagFilter';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import TagFilter from './TagFilter';
 import './style.scss';
 
 interface CategoryDropdownProps {
@@ -67,6 +67,16 @@ const CategoryDropdown = ({
     onApply(pendingTagIds);
   };
 
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    setPendingTagIds([]);
+    onApply([]);
+    setOpen(false);
+  };
+
   const label =
     pendingTagIds.length === 0
       ? 'ALL TAGS'
@@ -88,15 +98,7 @@ const CategoryDropdown = ({
               className="material-symbols-outlined category-clear"
               role="button"
               aria-label="Clear tag filters"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (debounceRef.current) {
-                  clearTimeout(debounceRef.current);
-                }
-                setPendingTagIds([]);
-                onApply([]);
-                setOpen(false);
-              }}
+              onClick={handleClear}
             >
               close
             </span>

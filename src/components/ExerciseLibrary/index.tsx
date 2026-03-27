@@ -33,7 +33,7 @@ const ExerciseLibrary = () => {
       }
     }, 300);
     return () => clearTimeout(timer);
-  }, [keywordInput]);
+  }, [keywordInput, filters.keyword]);
 
   const handlePageChange = (newPage: number) => {
     setFilters((f) => ({ ...f, pageNumber: newPage }));

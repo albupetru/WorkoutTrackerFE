@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 interface NameCellProps {
   exerciseId: string;
@@ -14,7 +14,7 @@ const NameCell = ({ exerciseId, exerciseName, description }: NameCellProps) => {
       className="exercise-name-cell"
       onClick={() => navigate(`/exercise/${exerciseId}`)}
     >
-      {" "}
+      {' '}
       <div className="accent-bar" />
       <div>
         <span className="exercise-name">{exerciseName}</span>

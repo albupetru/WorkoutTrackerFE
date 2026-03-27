@@ -77,14 +77,20 @@ class ApiClient {
 
   async get<T>(
     endpoint: string,
-    options?: { params?: Record<string, string | number | boolean> },
+    options?: { params?: Record<string, string | number | boolean | string[]> },
   ): Promise<T> {
     let url = endpoint;
 
     if (options?.params) {
       const searchParams = new URLSearchParams();
       Object.entries(options.params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
+        if (value === undefined || value === null || value === '') {
+          return;
+        }
+        if (Array.isArray(value)) {
+          // This is for handling array parameters like tagIds=1&tagIds=2
+          value.forEach((v) => searchParams.append(key, v));
+        } else {
           searchParams.append(key, String(value));
         }
       });

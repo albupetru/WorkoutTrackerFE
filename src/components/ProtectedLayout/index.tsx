@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { Navigate, useOutlet, useLocation } from "react-router-dom";
-import { isLoggedIn } from "../authentication/authManager";
-import useAuth from "../authentication/useAuth";
+import { useEffect } from 'react';
+import { Navigate, useOutlet, useLocation } from 'react-router-dom';
+import { isLoggedIn } from '../authentication/authManager';
+import useAuth from '../authentication/useAuth';
 
 const ProtectedLayout = () => {
   const { userLoaded, loading, onLogOut } = useAuth();
@@ -9,18 +9,15 @@ const ProtectedLayout = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("islogin fired");
     const checkUserStatus = async () => {
       const userLogged = await isLoggedIn();
-      console.log("userLogged", userLogged);
-      console.log("userLoaded", userLoaded);
       if (!userLogged && userLoaded) {
         await onLogOut();
       }
     };
 
     checkUserStatus();
-  }, [location]);
+  }, [location, onLogOut, userLoaded]);
 
   // Wait for auth initialization to complete
   if (loading) {

@@ -1,12 +1,13 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "./apiClient";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiClient } from './apiClient';
+import { ApiException } from './types';
 import {
   Exercise,
   ExerciseFilters,
   ExercisesResponse,
   CreateExerciseDto,
   UpdateExerciseDto,
-} from "../types/exercise.types";
+} from '../types/exercise.types';
 
 // ============================================================================
 // Query Hooks
@@ -17,24 +18,19 @@ import {
  */
 export function useExercises(filters: ExerciseFilters = {}) {
   return useQuery({
-    queryKey: ["exercises", filters],
+    queryKey: ['exercises', filters],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      if (filters.keyword) params.append("keyword", filters.keyword);
-      if (filters.tagIds) {
-        filters.tagIds.forEach((id) => params.append("tagIds", id));
-      }
-      if (filters.includeUnverified) {
-        params.append("includeUnverified", "true");
-      }
-      params.append("pageNumber", (filters.pageNumber || 1).toString());
-      params.append("pageSize", (filters.pageSize || 20).toString());
-      if (filters.sortBy) params.append("sortBy", filters.sortBy);
-      if (filters.sortOrder) params.append("sortOrder", filters.sortOrder);
-
-      const response = await apiClient.get<ExercisesResponse>(
-        `/exercise?${params}`,
-      );
+      const response = await apiClient.get<ExercisesResponse>('/exercise', {
+        params: {
+          ...(filters.keyword && { keyword: filters.keyword }),
+          ...(filters.tagIds?.length && { tagIds: filters.tagIds }),
+          ...(filters.includeUnverified && { includeUnverified: true }),
+          pageNumber: filters.pageNumber || 1,
+          pageSize: filters.pageSize || 20,
+          ...(filters.sortBy && { sortBy: filters.sortBy }),
+          ...(filters.sortOrder && { sortOrder: filters.sortOrder }),
+        },
+      });
       return response;
     },
     staleTime: 30_000, // 30 seconds - exercises change infrequently
@@ -46,17 +42,17 @@ export function useExercises(filters: ExerciseFilters = {}) {
  */
 export function useExercise(id: string | undefined) {
   return useQuery({
-    queryKey: ["exercise", id],
+    queryKey: ['exercise', id],
     queryFn: async () => {
       try {
         const response = await apiClient.get<Exercise>(`/exercise/${id}`);
         return response;
-      } catch (error: any) {
-        if (error.status === 404) {
-          throw new Error("Exercise not found");
+      } catch (error) {
+        if (error instanceof ApiException && error.status === 404) {
+          throw new Error('Exercise not found');
         }
-        if (error.status === 403) {
-          throw new Error("You do not have permission to view this exercise");
+        if (error instanceof ApiException && error.status === 403) {
+          throw new Error('You do not have permission to view this exercise');
         }
         throw error;
       }
@@ -67,8 +63,8 @@ export function useExercise(id: string | undefined) {
       // Don't retry on 404 or 403
       if (
         error instanceof Error &&
-        (error.message.includes("not found") ||
-          error.message.includes("permission"))
+        (error.message.includes('not found') ||
+          error.message.includes('permission'))
       ) {
         return false;
       }
@@ -89,11 +85,12 @@ export function useCreateExercise() {
 
   return useMutation({
     mutationFn: async (data: CreateExerciseDto) => {
-      const response = await apiClient.post<Exercise>("/exercise", data);
+      const response = await apiClient.post<Exercise>('/exercise', data);
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+      // We want to refetch the exercises list to include the new exercise, but we don't know the ID yet, so we invalidate the entire list
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
     },
   });
 }
@@ -113,8 +110,8 @@ export function useUpdateExercise() {
       return response;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-      queryClient.invalidateQueries({ queryKey: ["exercise", data.id] });
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+      queryClient.invalidateQueries({ queryKey: ['exercise', data.id] });
     },
   });
 }
@@ -130,8 +127,8 @@ export function useDeleteExercise() {
       await apiClient.delete(`/exercise/${id}`);
     },
     onSuccess: (_, exerciseId) => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-      queryClient.removeQueries({ queryKey: ["exercise", exerciseId] });
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+      queryClient.removeQueries({ queryKey: ['exercise', exerciseId] });
     },
   });
 }
@@ -150,8 +147,8 @@ export function useVerifyExercise() {
       return response;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-      queryClient.invalidateQueries({ queryKey: ["exercise", data.id] });
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+      queryClient.invalidateQueries({ queryKey: ['exercise', data.id] });
     },
   });
 }

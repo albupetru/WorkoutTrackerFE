@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTagGroups } from '../../hooks/useTags';
-import { Tag, TagGroup } from '../../types/tag.types';
+import { useTagGroups } from '../../../hooks/useTags';
+import { Tag, TagGroup } from '../../../types/tag.types';
 import {
   SECTION_LABELS,
   SECTION_ORDER,
   REQUIRED_SECTIONS,
-} from '../../utils/tagConstants';
-import { getLeafTags, getMuscleSubgroups } from '../../utils/tagUtils';
+} from '../../../utils/tagConstants';
+import { getLeafTags, getMuscleSubgroups } from '../../../utils/tagUtils';
 import './style.scss';
 
 // ---- Individual dropdown ----

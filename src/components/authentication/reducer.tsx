@@ -1,7 +1,7 @@
-import intialState from "./initialState";
-import { SET_USER, CLEAR_USER } from "./reducerActionTypes";
-import { AuthReducerAction } from "../../types/authReducerAction.type";
-import { UserData } from "../../types/userData.type";
+import intialState from './initialState';
+import { SET_USER, CLEAR_USER } from './reducerActionTypes';
+import { AuthReducerAction } from '../../types/authReducerAction.type';
+import { UserData } from '../../types/userData.type';
 
 const reducer = (
   state: UserData = intialState,

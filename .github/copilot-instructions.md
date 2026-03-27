@@ -39,6 +39,11 @@ src/
 - **Styles**: co-located `style.scss` in the same folder
 - **Sub-components**: components used exclusively by one parent component live inside that parent's folder, each in their own named subfolder (e.g., `ExerciseLibrary/ExerciseTable/`, `ExerciseLibrary/Pagination/`). Components shared across multiple features go in `src/components/` directly.
 - **Related config**: co-located helper files (e.g., `tableConfiguration.tsx`) stay in the component folder alongside `index.tsx`
+- **Inline sub-components**: very short components (under ~50 lines) that are only used in a single file may be defined inline in that same file. Once they grow to ~50 lines or more, extract them into their own file within the same folder.
+- **Shared components**: components used by more than one component should reside in the closest common parent folder in the hierarchy. Each shared component gets its own folder with an `index.tsx`.
+
+### Event Handlers
+- **Named functions for non-trivial handlers**: event handlers like `onChange`, `onBlur`, etc. that are longer than a one-liner should be defined as named functions (e.g., `const handleNameChange = ...`) rather than inline arrow functions in JSX — unless there is a specific performance or functional reason to keep them inline.
 
 ### Component Pattern
 - **Functional components only** (no class components)

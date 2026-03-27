@@ -1,6 +1,6 @@
-import { AuthReducerAction } from "../../types/authReducerAction.type";
-import { UserData } from "../../types/userData.type";
-import * as actionTypes from "./reducerActionTypes";
+import { AuthReducerAction } from '../../types/authReducerAction.type';
+import { UserData } from '../../types/userData.type';
+import * as actionTypes from './reducerActionTypes';
 
 export const setUser = (payload: UserData | null): AuthReducerAction => ({
   payload,
